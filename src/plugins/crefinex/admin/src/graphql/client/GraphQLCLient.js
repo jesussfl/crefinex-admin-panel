@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 
-const client = new GraphQLClient(`http://${process.env.STRAPI_ADMIN_HOST_URL}:1337/graphql`, {
+const client = new GraphQLClient(`${process.env.STRAPI_ADMIN_PUBLIC_URL}/graphql`, {
   headers: {
     authorization: `${process.env.STRAPI_ADMIN_API_KEY}`,
   },

@@ -27,9 +27,7 @@
     "node-postgres": "^0.6.2",
     "pg": "^8.11.3",
     "pg-connection-string": "^2.6.2",
-    "react-hook-form": "^7.45.4",
-    "strapi-google-auth": "^0.1.2",
-    "strapi-plugin-slugify": "^2.3.3"
+    "react-hook-form": "^7.45.4"
   },
   "author": {
     "name": "A Strapi developer"

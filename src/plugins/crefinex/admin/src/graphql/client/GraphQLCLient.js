@@ -1,6 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 
 console.log("process.env.STRAPI_ADMIN_PUBLIC_URL", process.env.STRAPI_ADMIN_PUBLIC_URL);
+console.log("process.env.STRAPI_ADMIN_API_KEY", process.env.STRAPI_ADMIN_API_KEY);
 const client = new GraphQLClient(`${process.env.STRAPI_ADMIN_PUBLIC_URL}/graphql`, {
   headers: {
     authorization: `${process.env.STRAPI_ADMIN_API_KEY}`,

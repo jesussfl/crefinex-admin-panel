@@ -17,9 +17,6 @@ import {
   deleteLessonMutation as deleteMutation,
 } from "../../graphql/mutations/lesson.mutations";
 function LessonsPage() {
-  console.log("process.env.STRAPI_ADMIN_PUBLIC_URL", process.env.STRAPI_ADMIN_PUBLIC_URL);
-  console.log("process.env.STRAPI_ADMIN_API_KEY", process.env.STRAPI_ADMIN_API_KEY);
-
   //Hooks
   const history = useHistory();
   const { sectionId } = useParams();
@@ -36,8 +33,6 @@ function LessonsPage() {
   const world = lessonsBySection?.section?.world?.data?.attributes?.name;
 
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
-  console.log("process.env.STRAPI_ADMIN_PUBLIC_URL", process.env.STRAPI_ADMIN_PUBLIC_URL);
-  console.log("process.env.STRAPI_ADMIN_API_KEY", process.env.STRAPI_ADMIN_API_KEY);
 
   return (
     <>

@@ -15,8 +15,9 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "Completion",
-        "selection"
+        "completion",
+        "simpleSelection",
+        "wordsMemory"
       ]
     },
     "lesson": {

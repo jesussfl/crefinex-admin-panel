@@ -40,15 +40,15 @@ function WordMemoryExercise({ control, onContentChange, exerciseContent }) {
 
   return (
     <>
-      <div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
         <Controller
           name="memoryWords"
           control={control}
           render={({ field }) => (
             <TextInput
               {...field}
-              placeholder="Type a word"
-              label="Memory Word"
+              placeholder="Ingresa una palabra"
+              label="Palabra"
               value={currentWord}
               onChange={(e) => setCurrentWord(e.target.value)}
               onKeyPress={(e) => {
@@ -60,8 +60,8 @@ function WordMemoryExercise({ control, onContentChange, exerciseContent }) {
           )}
         />
         <TextInput
-          placeholder="Type its definition"
-          label="Definition"
+          placeholder="Ingresa su definición"
+          label="Definición"
           value={currentDefinition}
           onChange={(e) => setCurrentDefinition(e.target.value)}
           onKeyPress={(e) => {
@@ -70,16 +70,18 @@ function WordMemoryExercise({ control, onContentChange, exerciseContent }) {
             }
           }}
         />
-        <Button onClick={handleAddWord}>Add Word</Button>
+        <Button onClick={handleAddWord} style={{ marginTop: "10px" }}>
+          Añadir palabra y definición
+        </Button>
       </div>
 
       <div>
-        <h3>Memory Words and Definitions:</h3>
+        <h3 style={{ color: "#fff" }}>Palabras y Definiciones:</h3>
         <ul>
           {Object.entries(wordDefinitions).map(([word, definition], index) => (
             <li key={index}>
               {word} - {definition}
-              <Button onClick={() => handleRemoveWord(word)}>Remove</Button>
+              <Button onClick={() => handleRemoveWord(word)}>Borrar</Button>
             </li>
           ))}
         </ul>

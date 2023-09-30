@@ -6,9 +6,9 @@ import TableHeaders from "./Tables/TableHeaders";
 import ExercisesTable from "./Tables/ByPages/ExercisesTable";
 
 import CustomModal from "./Modal/CustomModal";
-import ModuleModal from "./Modal/ByPages/ModuleModal";
+import ModuleModal from "./Modal/ByPages/SectionModal";
 import LessonModal from "./Modal/ByPages/LessonModal";
-import ExercisesModal from "./Modal/ByPages/ExercisesModal";
+import ExercisesModal from "./Modal/ByPages/ExerciseModal";
 
 import EmptyState from "./EmptyState";
 

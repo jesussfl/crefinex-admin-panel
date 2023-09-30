@@ -23,7 +23,7 @@ export default function CustomTable({ config, data, paginationData, children }) 
         rowCount={rowsPerPage}
         footer={
           <TFooter onClick={() => setShowModal(true)} icon={<Plus />}>
-            Add entry
+            Añadir entrada
           </TFooter>
         }
       >

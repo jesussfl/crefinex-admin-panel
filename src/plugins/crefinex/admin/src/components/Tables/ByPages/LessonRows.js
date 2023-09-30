@@ -5,6 +5,7 @@ import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils/";
 import { ROUTES } from "../../../constants/routes.constants";
+import { formatReadableDate } from "../../../utils/formatReadableDate";
 
 export function LessonRows({ data }) {
   const { setShowModal, setIdToEdit, setDataToEdit, setIdToDelete } = useModal();
@@ -26,13 +27,13 @@ export function LessonRows({ data }) {
               <Typography textColor="neutral800">{attributes.order}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.createdAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.createdAt)}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.updatedAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.updatedAt)}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.publishedAt)}</Typography>
             </Td>
             <Td>
               <Typography textColor="neutral800">{attributes.exercises.data.length}</Typography>

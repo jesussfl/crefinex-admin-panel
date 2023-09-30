@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
+import { Box, Flex, Typography, Tbody, Tr, Td, IconButton } from "@strapi/design-system";
 
-import { ArrowRight, Trash, Pencil } from "@strapi/icons";
+import { Trash } from "@strapi/icons";
+import { formatReadableDate } from "../../../utils/formatReadableDate";
 
 import { useModal } from "../../../utils/contexts/ModalContext";
 export function ExerciseRows({ data }) {
@@ -26,13 +27,13 @@ export function ExerciseRows({ data }) {
               <Typography textColor="neutral800">{attributes.content || ""}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.createdAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.createdAt)}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.updatedAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.updatedAt)}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.publishedAt}</Typography>
+              <Typography textColor="neutral800">{formatReadableDate(attributes.publishedAt)}</Typography>
             </Td>
             <Td></Td>
             <Td>

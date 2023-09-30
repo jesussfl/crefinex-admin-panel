@@ -1,9 +1,8 @@
 import React from "react";
 import CustomModal from "../CustomModal";
-
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import { Controller } from "react-hook-form";
-import { useCustomMutation, useModal } from "../../../utils/";
+import { useCustomMutation, useModal } from "../../../utils";
 
 import { useQuery } from "@tanstack/react-query";
 import { queryWorlds } from "../../../graphql/queries/world.queries";
@@ -13,10 +12,16 @@ import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
 const ORDER_INPUTS_TO_SHOW = 20;
 
 export default function ModuleModal({ mainAction }) {
+  // Access modal-related data using the modal hook
   const { idToEdit: editId, setIdToEdit, dataToEdit: defaultValues } = useModal();
+
+  // Use the custom mutation hook to handle data mutations
   const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
+
+  // Query data about worlds using React Query
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
 
+  // Define the submission function for the form
   const onSubmit = handleSubmit((values) => {
     const data = {
       description: values.description,
@@ -25,20 +30,30 @@ export default function ModuleModal({ mainAction }) {
       publishedAt: new Date(),
     };
 
+    // Perform the mutation to create or update a module
     editId ? mutate({ id: editId, data: { ...data } }) : mutate({ data: { ...data } });
   });
 
   return (
     <CustomModal handleSubmit={onSubmit} setIdToEdit={setIdToEdit}>
+      {/* Description input field */}
       <Controller
         name="description"
         control={control}
         render={({ field }) => {
           return (
-            <TextInput {...field} placeholder="Add a description here" label="Description" name="description" hint="Max 40 characters" />
+            <TextInput
+              {...field}
+              placeholder="Añade la descripción de la sección"
+              label="Descripción"
+              name="description"
+              hint="40 caracteres como máximo"
+            />
           );
         }}
       />
+
+      {/* World selection dropdown */}
       {isLoading && !error ? null : (
         <Controller
           name="world"
@@ -46,7 +61,7 @@ export default function ModuleModal({ mainAction }) {
           render={({ field }) => {
             const { crefinexWorlds } = data;
             return (
-              <SingleSelect {...field} placeholder="Select the world of this module" label="World">
+              <SingleSelect {...field} placeholder="Selecciona el mundo de la sección" label="Mundo">
                 {crefinexWorlds.data.map((world) => (
                   <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
                 ))}
@@ -56,13 +71,14 @@ export default function ModuleModal({ mainAction }) {
         ></Controller>
       )}
 
+      {/* Order selection dropdown */}
       <Controller
         name="order"
         control={control}
         rules={{ valueAsNumber: true }}
         render={({ field }) => {
           return (
-            <SingleSelect label="Order" placeholder="Select" {...field}>
+            <SingleSelect label="Orden" placeholder="Selecciona el orden" {...field}>
               {Array(ORDER_INPUTS_TO_SHOW)
                 .fill(0)
                 .map((_, index) => (

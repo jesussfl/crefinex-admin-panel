@@ -1,8 +1,26 @@
 import React from "react";
 import { Typography, VisuallyHidden, Thead, Tr, Th } from "@strapi/design-system";
 
+const headerTranslations = {
+  // You can add translations for headers as needed
+  id: "ID",
+  name: "Nombre",
+  description: "Descripción",
+  createdAt: "Creado",
+  updatedAt: "Actualizado",
+  publishedAt: "Publicado",
+  lessons: "Lecciones",
+  exercises: "Ejercicios",
+  type: "Tipo",
+  order: "Orden",
+  content: "Contenido",
+  world: "Mundo",
+  // ... Add more translations as needed
+};
+
 export default function TableHeaders({ data }) {
   const headers = Object.keys(data[0]?.attributes) || [];
+
   return (
     <Thead>
       <Tr>
@@ -11,21 +29,11 @@ export default function TableHeaders({ data }) {
         </Th>
         {headers.map((header, index) => (
           <Th key={index}>
-            <Typography variant="sigma">{headers[index]}</Typography>
+            <Typography variant="sigma">{headerTranslations[header] || header}</Typography>
           </Th>
-
-          // UNCOMMENT THIS IF YOU WANT TO AVOID RELATION ATTRIBUTES
-          // const attribute = data[0].attributes[header];
-
-          // // Check if the attribute has a type of "relation"
-          // if (attribute.type !== "relation") {
-          //   return <Th key={header.id}>{header}</Th>;
-          // }
-
-          // return null; // Exclude relation attribute header
         ))}
         <Th>
-          <VisuallyHidden>Actions</VisuallyHidden>
+          <VisuallyHidden>Acciones</VisuallyHidden>
         </Th>
       </Tr>
     </Thead>

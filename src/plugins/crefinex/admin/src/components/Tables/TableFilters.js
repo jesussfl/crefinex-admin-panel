@@ -9,11 +9,11 @@ export default function TableFilters() {
         <IconButton icon={<Cog />} />
         <Button variant="tertiary" startIcon={<Filter />} onClick={() => console.log("Filters")}>
           {" "}
-          Filters
+          Filtros
         </Button>
       </Flex>
       <Flex gap={4}>
-        <SingleSelect placeholder="Select">
+        <SingleSelect placeholder="Seleccionar">
           <SingleSelectOption value="apple">Apple</SingleSelectOption>
           <SingleSelectOption value="avocado">Avocado</SingleSelectOption>
           <SingleSelectOption value="banana">Banana</SingleSelectOption>

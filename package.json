@@ -29,9 +29,7 @@
     "pg-connection-string": "^2.6.2",
     "react-hook-form": "^7.45.4"
   },
-  "author": {
-    "name": "A Strapi developer"
-  },
+  "author": "A Strapi developer",
   "strapi": {
     "uuid": "0e5bbb77-2ee1-4d7a-aded-e04077933524"
   },
@@ -45,5 +43,7 @@
     "@babel/preset-react": "^7.22.5",
     "eslint": "^8.47.0",
     "eslint-plugin-react": "^7.33.2"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Jesussfl/crefinex-admin-panel.git"
 }

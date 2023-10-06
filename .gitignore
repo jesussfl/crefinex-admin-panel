@@ -114,3 +114,4 @@ build
 .strapi-updater.json
 # path: ./.gitignore
 package-lock.json
+yarn.lock

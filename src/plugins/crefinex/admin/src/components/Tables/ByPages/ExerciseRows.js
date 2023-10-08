@@ -11,6 +11,7 @@ export function ExerciseRows({ data }) {
     <Tbody>
       {data.map((row) => {
         const attributes = row.attributes;
+        console.log(attributes.content);
         return (
           <Tr key={row.id}>
             <Td>
@@ -24,7 +25,7 @@ export function ExerciseRows({ data }) {
               <Typography textColor="neutral800">{attributes.order}</Typography>
             </Td>
             <Td>
-              <Typography textColor="neutral800">{attributes.content || ""}</Typography>
+              <Typography textColor="neutral800">{JSON.stringify(attributes.content) || ""}</Typography>
             </Td>
             <Td>
               <Typography textColor="neutral800">{formatReadableDate(attributes.createdAt)}</Typography>

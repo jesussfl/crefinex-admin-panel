@@ -30,10 +30,11 @@ export default function ExercisesModal({ lessonId, mainAction, defaultValues }) 
   // Handle form submission
   const onSubmit = handleSubmit((data) => {
     // Create an exercise object with the provided data
+    const content = JSON.stringify(exerciseContent);
     const exercise = {
       data: {
         lesson: lessonId,
-        content: JSON.stringify(exerciseContent),
+        content: content,
         type: data.type,
         order: parseFloat(data.order),
         publishedAt: new Date(),

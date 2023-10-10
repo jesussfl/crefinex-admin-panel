@@ -24,7 +24,7 @@ export function ExerciseRows({ data }) {
             <Td>
               <Typography textColor="neutral800">{attributes.order}</Typography>
             </Td>
-            <Td>
+            <Td style={{ whiteSpace: "pre-wrap" }}>
               <Typography textColor="neutral800">{JSON.stringify(attributes.content) || ""}</Typography>
             </Td>
             <Td>

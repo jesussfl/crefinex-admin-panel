@@ -16,18 +16,6 @@ export default function CustomModal({ children, handleSubmit }) {
       }}
       labelledBy="title"
       as="form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Handle form submission and close the modal after submission
-        handleSubmit();
-
-        // Reset editing data and close the modal
-        setDataToEdit(null);
-        setIdToEdit(null);
-        setShowModal(false);
-      }}
     >
       <ModalHeader>
         {/* Display the title based on whether it's an edit or add operation */}
@@ -55,7 +43,7 @@ export default function CustomModal({ children, handleSubmit }) {
           </Button>
         }
         endActions={
-          <Button type="submit">
+          <Button onClick={handleSubmit}>
             {/* Submit button label based on whether it's an edit or add operation */}
             {idToEdit ? "Guardar edición" : "Guardar entrada"}
           </Button>

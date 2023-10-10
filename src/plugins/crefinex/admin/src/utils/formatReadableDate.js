@@ -5,8 +5,6 @@ export function formatReadableDate(dateTimeString) {
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
   };
   const date = new Date(dateTimeString);
   return date.toLocaleDateString("en-US", options);

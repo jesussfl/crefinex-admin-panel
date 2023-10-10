@@ -7,7 +7,12 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
   defaultValues = defaultValues || {};
 
   const { showAlert } = useAlerts();
-  const { control, handleSubmit, watch } = useForm({ defaultValues: defaultValues });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({ defaultValues: defaultValues });
 
   const queryClient = useQueryClient();
 
@@ -26,5 +31,6 @@ export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
     mutate: mutate.mutate,
     handleSubmit,
     watch,
+    errors,
   };
 };

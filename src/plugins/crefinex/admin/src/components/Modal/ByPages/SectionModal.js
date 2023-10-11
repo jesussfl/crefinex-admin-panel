@@ -8,26 +8,23 @@ import { useQuery } from "@tanstack/react-query";
 import { queryWorlds } from "../../../graphql/queries/world.queries";
 import { query } from "../../../graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
+import Wysiwyg from "../../Wysiwyg/Wysiwyg";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
+const MAX_WYSIWYG_LENGTH = 1000;
 export default function ModuleModal({ mainAction }) {
-  // Access modal-related data using the modal hook
   const { idToEdit: editId, setIdToEdit, dataToEdit: defaultValues, setDataToEdit, setShowModal } = useModal();
-
-  // Use the custom mutation hook to handle data mutations
-  const { control, mutate, handleSubmit, errors } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
-
-  // Query data about worlds using React Query
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
 
-  // Define the submission function for the form
   const onSubmit = handleSubmit((values) => {
-    // Define the data to be submitted for creating or editing a module
     const data = {
       description: values.description,
       order: parseFloat(values.order),
       world: values.world,
+      content: values.content,
+      contentTitle: values.contentTitle,
       publishedAt: new Date(),
     };
 
@@ -44,10 +41,12 @@ export default function ModuleModal({ mainAction }) {
         control={control}
         rules={{
           required: "Este campo es obligatorio",
-          maxLength: { value: MAX_DESCRIPTION_LENGTH, message: `Máximo ${MAX_DESCRIPTION_LENGTH} caracteres` },
-          minLength: { value: 2, message: "Mínimo 2 caracteres" },
-          pattern: { value: /^[a-zA-Z0-9\s]+$/, message: "Solo letras y números" },
+          maxLength: { value: MAX_DESCRIPTION_LENGTH, message: `Máximo ${MAX_DESCRIPTION_LENGTH} caracteres` },
+          minLength: { value: 2, message: "Mínimo 2 caracteres" },
+          pattern: { value: /^[a-zA-Z0-9\s]+$/, message: "Solo letras y números" },
         }}
+        label="Descripción"
+        placeholder="Añade una descripción"
       />
       {isLoading && !error ? null : (
         <SingleSelectControlled
@@ -58,20 +57,41 @@ export default function ModuleModal({ mainAction }) {
         />
       )}
 
-      {/* Order selection dropdown */}
       <OrderSelectionControlled name="order" control={control} rules={{ required: "Este campo es obligatorio" }} />
+      <TextInputControlled
+        name="contentTitle"
+        control={control}
+        rules={{
+          required: "Este campo es obligatorio",
+          maxLength: { value: MAX_DESCRIPTION_LENGTH, message: `Máximo ${MAX_DESCRIPTION_LENGTH} caracteres` },
+          minLength: { value: 2, message: "Mínimo 2 caracteres" },
+          pattern: { value: /^[a-zA-Z0-9\s]+$/, message: "Solo letras y números" },
+        }}
+        label="Título del contenido de la sección"
+        placeholder="Añade un titulo interesante"
+      />
+      <WysiwygControlled
+        name="content"
+        displayName="Contenido de la teoría"
+        control={control}
+        rules={{
+          required: "Este campo es obligatorio",
+          maxLength: { value: MAX_WYSIWYG_LENGTH, message: `Máximo ${MAX_WYSIWYG_LENGTH} caracteres` },
+          minLength: { value: 100, message: "El contenido es muy corto" },
+        }}
+      />
     </CustomModal>
   );
 }
 
-const TextInputControlled = forwardRef(({ name, control, rules }, ref) => {
+const TextInputControlled = forwardRef(({ name, control, rules, placeholder, label }, ref) => {
   const [inputValue, setInputValue] = useState("");
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
-      render={({ field: { onChange, onBlur }, fieldState }) => (
+      render={({ field: { onChange, onBlur, value }, fieldState }) => (
         <TextInput
           onChange={(e) => {
             const newValue = e.target.value;
@@ -82,18 +102,17 @@ const TextInputControlled = forwardRef(({ name, control, rules }, ref) => {
             }
           }}
           onBlur={onBlur}
-          value={inputValue || ""}
+          value={inputValue || value}
           ref={ref}
-          placeholder="Añade la descripción de la sección"
-          label="Descripción"
-          hint={`${MAX_DESCRIPTION_LENGTH} caracteres como máximo`}
+          placeholder={placeholder}
+          label={label}
+          hint={`${MAX_DESCRIPTION_LENGTH} carácteres como máximo`}
           error={fieldState.error?.message}
         />
       )}
     />
   );
 });
-
 const SingleSelectControlled = forwardRef(({ name, control, rules, data }, ref) => (
   <Controller
     name={name}
@@ -116,7 +135,6 @@ const SingleSelectControlled = forwardRef(({ name, control, rules, data }, ref) 
     )}
   />
 ));
-
 const OrderSelectionControlled = forwardRef(({ name, control, rules }, ref) => (
   <Controller
     name={name}
@@ -140,6 +158,26 @@ const OrderSelectionControlled = forwardRef(({ name, control, rules }, ref) => (
             </SingleSelectOption>
           ))}
       </SingleSelect>
+    )}
+  />
+));
+const WysiwygControlled = forwardRef(({ name, control, rules, displayName }, ref) => (
+  <Controller
+    name={name}
+    control={control}
+    rules={rules}
+    render={({ field: { onChange, onBlur, value }, fieldState }) => (
+      <>
+        <Wysiwyg
+          name={name}
+          onChange={onChange}
+          onBlur={onBlur}
+          value={value}
+          ref={ref}
+          displayName={displayName}
+          error={fieldState.error?.message}
+        />
+      </>
     )}
   />
 ));

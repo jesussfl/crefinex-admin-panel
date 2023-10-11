@@ -36,6 +36,13 @@
       "relation": "manyToOne",
       "target": "plugin::crefinex.world",
       "inversedBy": "sections"
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "contentTitle": {
+      "type": "string"
     }
   }
 }

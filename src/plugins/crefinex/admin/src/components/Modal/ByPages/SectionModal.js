@@ -72,7 +72,7 @@ export default function ModuleModal({ mainAction }) {
       />
       <WysiwygControlled
         name="content"
-        displayName="Contenido de la teoría"
+        displayName="Contenido de la sección"
         control={control}
         rules={{
           required: "Este campo es obligatorio",

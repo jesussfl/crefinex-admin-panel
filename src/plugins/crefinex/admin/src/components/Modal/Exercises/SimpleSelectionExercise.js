@@ -1,15 +1,34 @@
 import React, { useState } from "react";
 import { Plus } from "@strapi/icons";
 import { Button, TextInput } from "@strapi/design-system";
+import { useLibrary, prefixFileUrlWithBackendUrl } from "@strapi/helper-plugin";
+
 import { useEffect } from "react";
 
 function SimpleSelectionExercise({ onContentChange }) {
+  const [showMediaLibDialog, setShowMediaLibDialog] = useState(false);
+  const [optionIndex, setOptionIndex] = useState(null);
+  const { components } = useLibrary();
+  const MediaLibDialog = components["media-library"];
+  // console.log("value ", value);
+  const handleToggleMediaLibDialog = () => {
+    setShowMediaLibDialog(!showMediaLibDialog);
+  };
+
+  const handleSelectAssets = (files) => {
+    const formattedFiles = files.map((file) => prefixFileUrlWithBackendUrl(file.url));
+    if (formattedFiles.length > 1) {
+      return;
+    }
+    addImageToOption(formattedFiles[0], optionIndex);
+    handleToggleMediaLibDialog();
+  };
   const [content, setContent] = useState({
     question: "", // Question text
     options: [], // Array to store answer options
     correctAnswerIndex: null, // Index of the correct answer
   });
-
+  console.log("content ", content);
   const [correctOptions, setCorrectOptions] = useState([]); // Array to store indices of correct answers
 
   // Function to add a new answer option
@@ -30,7 +49,14 @@ function SimpleSelectionExercise({ onContentChange }) {
       options: updatedOptions,
     }));
   };
-
+  const addImageToOption = (image, index) => {
+    const updatedOptions = [...content.options];
+    updatedOptions[index].image = image;
+    setContent((prevContent) => ({
+      ...prevContent,
+      options: updatedOptions,
+    }));
+  };
   // Function to remove an answer option
   const removeOption = (index) => {
     const updatedOptions = content.options.filter((_, i) => i !== index);
@@ -100,6 +126,19 @@ function SimpleSelectionExercise({ onContentChange }) {
                 justifyContent: "flex-end",
               }}
             >
+              {option.image ? (
+                <p style={{ fontSize: "12px", color: "blue" }}>Imagen Añadida: {option.image}</p>
+              ) : (
+                <p style={{ fontSize: "12px" }}>Sin imagen</p>
+              )}
+              <Button
+                onClick={() => {
+                  setOptionIndex(index);
+                  handleToggleMediaLibDialog();
+                }}
+              >
+                Añadir imágen
+              </Button>
               <Button variant={correctOptions.includes(index) ? "success" : "default"} onClick={() => setCorrectOption(index)}>
                 {correctOptions.includes(index) ? "Marcado como correcta" : "Marcar como correcta"}
               </Button>
@@ -112,6 +151,7 @@ function SimpleSelectionExercise({ onContentChange }) {
       <Button variant="secondary" startIcon={<Plus />} onClick={addOption}>
         Añadir una opción
       </Button>
+      {showMediaLibDialog && <MediaLibDialog onClose={handleToggleMediaLibDialog} onSelectAssets={handleSelectAssets} />}
     </>
   );
 }

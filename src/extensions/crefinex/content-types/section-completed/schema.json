@@ -1,26 +1,29 @@
 {
   "kind": "collectionType",
-  "collectionName": "worlds_completed",
+  "collectionName": "sections_completed",
   "info": {
-    "singularName": "world-completed",
-    "pluralName": "worlds-completed",
-    "displayName": "World Completed",
+    "singularName": "section-completed",
+    "pluralName": "sections-completed",
+    "displayName": "Section Completed",
     "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "attributes": {
+    "completed_date": {
+      "type": "datetime"
+    },
     "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "world_completeds"
+      "inversedBy": "section_completeds"
     },
-    "world": {
+    "section": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "plugin::crefinex.world"
+      "target": "plugin::crefinex.section"
     }
   }
 }

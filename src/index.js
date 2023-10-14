@@ -2,6 +2,8 @@ const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/grap
 const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonsBySection");
 const { resolvers: exerciseResolvers } = require("./plugins/crefinex/server/graphql/modules/exercise.module");
 const { resolvers: lessonsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonCompleted.module");
+const { resolvers: sectionsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/sectionCompleted.module");
+const { resolvers: worldsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/worldCompleted.module");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -27,6 +29,12 @@ module.exports = {
     extend type Query {
       lessonsCompletedByUser(id:ID!, start:Int, limit:Int): LessonsCompletedByUser!
     }
+    extend type Query {
+      sectionsCompletedByUser(id:ID!, start:Int, limit:Int): SectionsCompletedByUser!
+    }
+    extend type Query {
+      worldsCompletedByUser(id:ID!, start:Int, limit:Int): WorldsCompletedByUser!
+    }
     type LessonsBySection {
       lessons: [CrefinexLessonEntity]
       pagination: Pagination
@@ -46,10 +54,27 @@ module.exports = {
       lessonsCompleted: [CrefinexLessonCompletedEntity]
       pagination: Pagination
     }
+    type SectionsCompletedByUser {
+      sectionsCompleted: [CrefinexSectionCompletedEntity]
+      pagination: Pagination
+    }
+    type WorldsCompletedByUser {
+      worldsCompleted: [CrefinexWorldCompletedEntity]
+      pagination: Pagination
+    }
     `;
     extensionService.use(({ strapi }) => ({
       typeDefs: Query,
-      resolvers: { Query: { ...lessonsBySectionResolvers, ...sectionsResolvers, ...exerciseResolvers, ...lessonsCompletedResolvers } },
+      resolvers: {
+        Query: {
+          ...lessonsBySectionResolvers,
+          ...sectionsResolvers,
+          ...exerciseResolvers,
+          ...lessonsCompletedResolvers,
+          ...sectionsCompletedResolvers,
+          ...worldsCompletedResolvers,
+        },
+      },
     }));
   },
 

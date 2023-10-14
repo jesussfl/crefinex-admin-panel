@@ -10,5 +10,9 @@
     "draftAndPublish": false,
     "comment": ""
   },
-  "attributes": {}
+  "attributes": {
+    "completed_date": {
+      "type": "datetime"
+    }
+  }
 }

@@ -89,6 +89,12 @@
       "relation": "oneToMany",
       "target": "plugin::crefinex.lesson-completed",
       "mappedBy": "user"
+    },
+    "section_completeds": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::crefinex.section-completed",
+      "mappedBy": "user"
     }
   }
 }

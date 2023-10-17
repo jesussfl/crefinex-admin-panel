@@ -6,7 +6,7 @@ export default function CustomModal({ children, handleSubmit }) {
   const { modalHandler } = useModal();
 
   return (
-    <ModalLayout labelledBy="title" as="form">
+    <ModalLayout labelledBy="title" as="form" onClose={modalHandler.close}>
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
           {modalHandler.type === "edit" ? "Editar entrada" : "Crear entrada"}

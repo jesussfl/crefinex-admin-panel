@@ -20,8 +20,10 @@ export const updateExerciseMutation = gql`
 
 export const deleteExerciseMutation = gql`
   mutation ($id: ID!) {
-    deleteExercise(id: $id) {
-      id
+    deleteCrefinexExercise(id: $id) {
+      data {
+        id
+      }
     }
   }
 `;

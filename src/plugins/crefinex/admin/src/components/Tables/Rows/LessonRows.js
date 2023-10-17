@@ -1,14 +1,12 @@
 import React from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
-import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
-import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils";
 import { ROUTES } from "../../../utils/constants/routes.constants";
 import { formatReadableDate } from "../../../utils/helpers/formatReadableDate";
 
 export function LessonRows({ data }) {
-  const { setShowModal, setIdToEdit, setDataToEdit, setIdToDelete } = useModal();
+  const { modalHandler } = useModal();
   return (
     <Tbody>
       {data.map((row) => {
@@ -46,8 +44,9 @@ export function LessonRows({ data }) {
                 <Box paddingLeft={1}>
                   <IconButton
                     onClick={() => {
-                      setDataToEdit({ ...attributes });
-                      setIdToEdit(row.id), setShowModal(true);
+                      modalHandler.open("edit", row.id, {
+                        ...attributes,
+                      });
                     }}
                     label="Edit"
                     noBorder
@@ -55,7 +54,7 @@ export function LessonRows({ data }) {
                   />
                 </Box>
                 <Box paddingLeft={1}>
-                  <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                  <IconButton onClick={() => modalHandler.open("delete", row.id)} label="Delete" noBorder icon={<Trash />} />
                 </Box>
               </Flex>
             </Td>

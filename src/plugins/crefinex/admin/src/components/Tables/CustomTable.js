@@ -5,15 +5,12 @@ import { usePagination } from "../../utils/hooks/usePagination";
 import { TableFilters, TablePagination, EmptyState, TableHeaders } from "..";
 import { useModal } from "../../utils/contexts/ModalContext";
 export default function CustomTable({ config, data, paginationData, children }) {
-  const { setShowModal, idToEdit, idToDelete, showModal } = useModal();
+  const { modalHandler } = useModal();
   const { currentPage, rowsPerPage, history } = usePagination();
 
   const isDataEmpty = data.length === 0;
-  const showDeleteDialog = idToDelete !== null;
-  const showEditModal = showModal && idToEdit;
-  const showCreateModal = showModal && !idToEdit;
 
-  if (isDataEmpty) return <EmptyState showModal={setShowModal} renderActionModal={config.createModal} message={config.emptyStateMessage} />;
+  if (isDataEmpty) return <EmptyState renderActionModal={config.createModal} message={config.emptyStateMessage} />;
 
   return (
     <Flex gap={4} direction="column" alignItems="stretch">
@@ -22,7 +19,7 @@ export default function CustomTable({ config, data, paginationData, children }) 
         colCount={6}
         rowCount={rowsPerPage}
         footer={
-          <TFooter onClick={() => setShowModal(true)} icon={<Plus />}>
+          <TFooter onClick={() => modalHandler.open("create")} icon={<Plus />}>
             Añadir entrada
           </TFooter>
         }
@@ -38,9 +35,9 @@ export default function CustomTable({ config, data, paginationData, children }) 
         totalPageCount={paginationData?.pageCount || 1}
       />
 
-      {showDeleteDialog && config.deleteDialog()}
-      {showEditModal && config.editModal()}
-      {showCreateModal && config.createModal()}
+      {modalHandler.type === "create" && config.createModal()}
+      {modalHandler.type === "edit" && config.editModal()}
+      {modalHandler.type === "delete" && config.deleteDialog()}
     </Flex>
   );
 }

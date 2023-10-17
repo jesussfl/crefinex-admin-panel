@@ -4,19 +4,19 @@ import { EmptyStateLayout, Button } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import { useModal } from "../../utils/contexts/ModalContext";
 export default function EmptyState({ message, renderActionModal }) {
-  const { showModal, setShowModal } = useModal();
+  const { modalHandler } = useModal();
   return (
     <>
       <EmptyStateLayout
         icon={<Illo />}
         content={message}
         action={
-          <Button onClick={() => setShowModal(true)} variant="secondary" startIcon={<Plus />}>
-            Add an entry
+          <Button onClick={() => modalHandler.open("create")} variant="secondary" startIcon={<Plus />}>
+            Crear entrada
           </Button>
         }
       />
-      {showModal && renderActionModal()}
+      {modalHandler.type === "create" && renderActionModal()}
     </>
   );
 }

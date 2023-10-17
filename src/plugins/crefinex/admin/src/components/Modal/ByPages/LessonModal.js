@@ -1,45 +1,29 @@
 import React, { forwardRef } from "react";
 import CustomModal from "../CustomModal";
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Controller } from "react-hook-form";
-import { useCustomMutation, useModal } from "../../../utils/";
+import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useModal } from "../../../utils/";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
+import { useAlerts } from "../../../utils/contexts/AlertsContext";
+import { query } from "../../../utils/graphql/client/GraphQLCLient";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 40; // Max description length
 
-const TextInputControlled = forwardRef(({ name, control, rules, placeholder, label, hint }, ref) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <TextInput {...field} ref={ref} placeholder={placeholder} label={label} hint={hint} error={fieldState.error?.message} />
-      )}
-    />
-  );
-});
-
-const SingleSelectControlled = forwardRef(({ name, control, rules, label, placeholder, children }, ref) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <SingleSelect {...field} ref={ref} placeholder={placeholder} label={label} error={fieldState.error?.message}>
-          {children}
-        </SingleSelect>
-      )}
-    />
-  );
-});
-
 export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
-  const { idToEdit, setIdToEdit, dataToEdit: defaultValues, setDataToEdit, setShowModal } = useModal();
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.lessons, mainAction, defaultValues);
+  const { defaultValues, modalHandler } = useModal();
+  const queryClient = useQueryClient();
+  const { control, handleSubmit } = useForm({ defaultValues });
+  const { showAlert } = useAlerts();
+  const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(QUERY_KEYS.lessons);
 
+      modalHandler.type === "edit" ? showAlert("success", "Lección editada") : showAlert("success", "Lección creada");
+      modalHandler.close();
+    },
+  });
   const onSubmit = handleSubmit((values) => {
     const data = {
       description: values.description,
@@ -48,16 +32,21 @@ export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
       world: sectionInfo.world.data.id,
       publishedAt: new Date(),
     };
-
-    idToEdit ? mutate({ id: idToEdit, data: { ...data } }) : mutate({ data: { ...data } });
-
-    setIdToEdit(null);
-    setShowModal(false);
-    setDataToEdit(null);
+    if (modalHandler.type === "edit") {
+      const editMutationData = {
+        id: modalHandler.id,
+        data: { ...data },
+      };
+      mutation.mutate(editMutationData);
+    } else {
+      const createMutationData = { data: { ...data } };
+      mutation.mutate(createMutationData);
+    }
+    modalHandler.close();
   });
 
   return (
-    <CustomModal handleSubmit={onSubmit} setIdToEdit={setIdToEdit}>
+    <CustomModal handleSubmit={onSubmit}>
       {/* Description input field */}
       <TextInputControlled
         name="description"
@@ -92,3 +81,30 @@ export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
     </CustomModal>
   );
 }
+const TextInputControlled = forwardRef(({ name, control, rules, placeholder, label, hint }, ref) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field, fieldState }) => (
+        <TextInput {...field} ref={ref} placeholder={placeholder} label={label} hint={hint} error={fieldState.error?.message} />
+      )}
+    />
+  );
+});
+
+const SingleSelectControlled = forwardRef(({ name, control, rules, label, placeholder, children }, ref) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field, fieldState }) => (
+        <SingleSelect {...field} ref={ref} placeholder={placeholder} label={label} error={fieldState.error?.message}>
+          {children}
+        </SingleSelect>
+      )}
+    />
+  );
+});

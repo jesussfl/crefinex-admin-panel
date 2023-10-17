@@ -1,34 +1,32 @@
 import React, { forwardRef, useState } from "react";
 import CustomModal from "../CustomModal";
 import { Button, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SimpleSelectionExercise from "../Exercises/SimpleSelectionExercise";
 import CompletionExercise from "../Exercises/CompletionExercise";
 import WordMemoryExercise from "../Exercises/WordMemoryExercise";
-import { useCustomMutation, useModal } from "../../../utils";
+import { useModal } from "../../../utils";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
+import { useAlerts } from "../../../utils/contexts/AlertsContext";
+import { query } from "../../../utils/graphql/client/GraphQLCLient";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_EXERCISE_ORDER = 100;
 
-const SingleSelectControlled = forwardRef(({ name, control, rules, label, placeholder, children }, ref) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <SingleSelect {...field} ref={ref} placeholder={placeholder} label={label} error={fieldState.error?.message}>
-          {children}
-        </SingleSelect>
-      )}
-    />
-  );
-});
+export default function ExercisesModal({ lessonId, mainAction }) {
+  const { defaultValues, modalHandler } = useModal();
+  const queryClient = useQueryClient();
+  const { control, handleSubmit, watch } = useForm({ defaultValues });
+  const { showAlert } = useAlerts();
+  const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(QUERY_KEYS.exercises);
 
-export default function ExercisesModal({ lessonId, mainAction, defaultValues }) {
-  const { control, mutate, handleSubmit, watch } = useCustomMutation(QUERY_KEYS.exercises, mainAction, defaultValues);
-  const { idToEdit } = useModal();
+      modalHandler.type === "edit" ? showAlert("success", "Lección editada") : showAlert("success", "Lección creada");
+      modalHandler.close();
+    },
+  });
   const [exerciseContent, setExerciseContent] = useState({});
   const renderExerciseFields = () => {
     if (watch("type") === "completion") {
@@ -51,8 +49,22 @@ export default function ExercisesModal({ lessonId, mainAction, defaultValues }) 
         publishedAt: new Date(),
       },
     };
+    if (modalHandler.type === "edit") {
+      const editMutationData = {
+        id: modalHandler.id,
+        data: { ...exercise },
+      };
+      mutation.mutate(editMutationData);
+    } else {
+      const createMutationData = {
+        ...exercise,
+      };
+      mutation.mutate(createMutationData);
+    }
 
-    idToEdit ? mutate({ id: idToEdit, data: { ...exercise } }) : mutate({ ...exercise });
+    modalHandler.close();
+
+    // idToEdit ? mutate({ id: idToEdit, data: { ...exercise } }) : mutate({ ...exercise });
   });
 
   return (
@@ -93,3 +105,17 @@ export default function ExercisesModal({ lessonId, mainAction, defaultValues }) 
     </CustomModal>
   );
 }
+const SingleSelectControlled = forwardRef(({ name, control, rules, label, placeholder, children }, ref) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field, fieldState }) => (
+        <SingleSelect {...field} ref={ref} placeholder={placeholder} label={label} error={fieldState.error?.message}>
+          {children}
+        </SingleSelect>
+      )}
+    />
+  );
+});

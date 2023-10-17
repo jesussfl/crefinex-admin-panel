@@ -1,24 +1,35 @@
 import React, { forwardRef, useState } from "react";
 import CustomModal from "../CustomModal";
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
-import { Controller } from "react-hook-form";
-import { useCustomMutation, useModal } from "../../../utils";
+import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useModal } from "../../../utils";
 
-import { useQuery } from "@tanstack/react-query";
 import { queryWorlds } from "../../../utils/graphql/queries/world.queries";
 import { query } from "../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
 import Wysiwyg from "../../Wysiwyg/Wysiwyg";
+import { useAlerts } from "../../../utils/contexts/AlertsContext";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_WYSIWYG_LENGTH = 1000;
 export default function SectionModal({ mainAction }) {
-  const { defaultValues, modalHandler } = useModal();
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.sections, mainAction, defaultValues);
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
+  const { defaultValues, modalHandler } = useModal();
+  const { control, handleSubmit } = useForm({ defaultValues });
+  const { showAlert } = useAlerts();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(QUERY_KEYS.sections);
+      modalHandler.type === "edit" ? showAlert("success", "Sección editada") : showAlert("success", "Sección creada");
+      modalHandler.close();
+    },
+  });
 
   const onSubmit = handleSubmit((values) => {
+    // Create a 'data' object with form values
     const data = {
       description: values.description,
       order: parseFloat(values.order),
@@ -28,11 +39,21 @@ export default function SectionModal({ mainAction }) {
       publishedAt: new Date(),
     };
 
+    // Check if the action is an edit or create
     if (modalHandler.type === "edit") {
-      mutate({ id: modalHandler.id, data: { ...data } });
+      // If it's an edit, include the ID in the mutation
+      const editMutationData = {
+        id: modalHandler.id,
+        data: { ...data },
+      };
+      mutation.mutate(editMutationData);
     } else {
-      mutate({ data: { ...data } });
+      // If it's a create, send only the data
+      const createMutationData = { data: { ...data } };
+      mutation.mutate(createMutationData);
     }
+
+    // Close the modal after performing the mutation
     modalHandler.close();
   });
 

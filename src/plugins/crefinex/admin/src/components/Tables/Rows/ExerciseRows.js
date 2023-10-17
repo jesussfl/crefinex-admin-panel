@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton } from "@strapi/design-system";
 
-import { Trash } from "@strapi/icons";
+import { Trash, Pencil } from "@strapi/icons";
 import { formatReadableDate } from "../../../utils/helpers/formatReadableDate";
 
 import { useModal } from "../../../utils/contexts/ModalContext";
 export function ExerciseRows({ data }) {
-  const { setIdToDelete } = useModal();
+  const { modalHandler } = useModal();
   return (
     <Tbody>
       {data.map((row) => {
@@ -38,8 +38,21 @@ export function ExerciseRows({ data }) {
             <Td></Td>
             <Td>
               <Flex style={{ justifyContent: "end" }}>
+                {/*Enable editing is too hard */}
+                {/* <Box paddingLeft={1}>
+                  <IconButton
+                    onClick={() => {
+                      modalHandler.open("edit", row.id, {
+                        ...attributes,
+                      });
+                    }}
+                    label="Editar"
+                    noBorder
+                    icon={<Pencil />}
+                  />
+                </Box> */}
                 <Box paddingLeft={1}>
-                  <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                  <IconButton onClick={() => modalHandler.open("delete", row.id)} label="Delete" noBorder icon={<Trash />} />
                 </Box>
               </Flex>
             </Td>

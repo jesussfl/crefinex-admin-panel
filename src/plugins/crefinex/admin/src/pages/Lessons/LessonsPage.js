@@ -23,7 +23,7 @@ function LessonsPage() {
   // Hooks and parameters
   const history = useHistory();
   const { sectionId } = useParams();
-  const { setShowModal } = useModal();
+  const { modalHandler } = useModal();
   const { currentPage, rowsPerPage } = usePagination();
 
   // Fetch data for lessons using React Query
@@ -56,7 +56,7 @@ function LessonsPage() {
             }
             primaryAction={
               // Button to open a modal for adding a new lesson
-              <Button startIcon={<Plus />} onClick={() => setShowModal(true)}>
+              <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
                 Añadir una lección
               </Button>
             }

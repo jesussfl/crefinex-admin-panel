@@ -5,7 +5,10 @@ import { Typography, Button, Flex, Dialog, DialogBody, DialogFooter } from "@str
 import { ExclamationMarkCircle, Trash, CheckCircle } from "@strapi/icons";
 import { useModal } from "../../utils/contexts/ModalContext";
 import { useCustomMutation } from "../../utils/hooks/useCustomMutation";
-
+import { query } from "../../utils/graphql/client/GraphQLCLient";
+import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAlerts } from "../../utils/contexts/AlertsContext";
 // Confirmation dialog component
 export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }) {
   return (
@@ -43,14 +46,23 @@ export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }
 
 // Delete dialog component
 export function DeleteDialog({ mainAction, section }) {
-  const { mutate } = useCustomMutation(section, mainAction);
-  const { setIdToDelete: showDialog, idToDelete } = useModal();
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlerts();
+  const { modalHandler } = useModal();
+  const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(section);
+
+      showAlert("success", `${section} eliminada`);
+      modalHandler.close();
+    },
+  });
   const onSubmit = () => {
-    mutate({ id: idToDelete });
-    showDialog(null);
+    mutation.mutate({ id: modalHandler.id });
+    modalHandler.close();
   };
   return (
-    <Dialog onClose={() => showDialog(null)} title="Confirmación" isOpen={showDialog !== null}>
+    <Dialog onClose={modalHandler.close} title="Confirmación" isOpen={modalHandler.type === "delete"}>
       <DialogBody icon={<ExclamationMarkCircle />}>
         <Flex direction="column" alignItems="center" gap={2}>
           <Flex justifyContent="center">
@@ -60,7 +72,7 @@ export function DeleteDialog({ mainAction, section }) {
       </DialogBody>
       <DialogFooter
         startAction={
-          <Button onClick={() => showDialog(null)} variant="tertiary">
+          <Button onClick={modalHandler.close} variant="tertiary">
             Cancelar
           </Button>
         }

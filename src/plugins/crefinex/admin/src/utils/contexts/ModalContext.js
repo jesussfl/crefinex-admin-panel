@@ -13,6 +13,7 @@ export const ModalProvider = ({ children }) => {
     setIdToEdit(null);
     setDataToEdit(null);
     setIdToDelete(null);
+    setModalType(null);
   };
   const openModal = (type = "create", idToBeEditedOrDeleted = null, data = null) => {
     setShowModal(true);
@@ -29,7 +30,7 @@ export const ModalProvider = ({ children }) => {
   return (
     <ModalContext.Provider
       value={{
-        modalHandler: { close: closeModal, open: openModal, type: modalType, id: idToEdit },
+        modalHandler: { close: closeModal, open: openModal, type: modalType, id: idToEdit || idToDelete },
         showModal,
         setShowModal,
         idToEdit,

@@ -3,11 +3,7 @@ import React from "react";
 import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
 import { CustomAlert, CustomLoader, SectionModal, DeleteDialog, CustomTable } from "../../components";
 import { SectionRows } from "../../components/Tables/Rows/SectionRows";
-import {
-  createSectionMutation as createMutation,
-  updateSectionMutation as updateMutation,
-  deleteSectionMutation as deleteMutation,
-} from "../../utils/graphql/mutations/section.mutations";
+import { createSectionMutation, updateSectionMutation, deleteSectionMutation } from "../../utils/graphql/mutations/section.mutations";
 
 import { Plus } from "@strapi/icons";
 import { usePagination, useModal } from "../../utils";
@@ -32,46 +28,38 @@ function SectionsPage() {
   );
   const { sections } = isLoading ? {} : data;
 
-  // Display error message if there is an error
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
-
+  if (isLoading && !data) return <CustomLoader />;
   return (
     <>
-      {isLoading ? (
-        // Show a loader while data is being fetched
-        <CustomLoader />
-      ) : (
-        <>
-          <BaseHeaderLayout
-            title="Secciones"
-            subtitle="Aquí podrás añadir las secciones de los mundos creados."
-            as="h2"
-            primaryAction={
-              // Button to open a modal for adding a new section
-              <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
-                Añadir sección
-              </Button>
-            }
-          />
-          <ContentLayout>
-            <CustomTable
-              config={{
-                tableName: "sections",
-                emptyStateMessage: "No hay secciones aún",
-                createModal: () => <SectionModal mainAction={createMutation} />,
-                editModal: () => <SectionModal mainAction={updateMutation} />,
-                deleteDialog: () => <DeleteDialog mainAction={deleteMutation} section={"sections"} />,
-              }}
-              // Pass data and pagination information to the CustomTable component
-              data={sections.data}
-              paginationData={sections.meta.pagination}
-            >
-              {/* Render rows for the sections table */}
-              <SectionRows data={sections.data} />
-            </CustomTable>
-          </ContentLayout>
-        </>
-      )}
+      <BaseHeaderLayout
+        title="Secciones"
+        subtitle="Aquí podrás añadir las secciones de los mundos creados."
+        as="h2"
+        primaryAction={
+          // Button to open a modal for adding a new section
+          <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
+            Añadir sección
+          </Button>
+        }
+      />
+      <ContentLayout>
+        <CustomTable
+          config={{
+            tableName: "sections",
+            emptyStateMessage: "No hay secciones aún",
+            createModal: () => <SectionModal mainAction={createSectionMutation} />,
+            editModal: () => <SectionModal mainAction={updateSectionMutation} />,
+            deleteDialog: () => <DeleteDialog mainAction={deleteSectionMutation} section={"sections"} />,
+          }}
+          // Pass data and pagination information to the CustomTable component
+          data={sections.data}
+          paginationData={sections.meta.pagination}
+        >
+          {/* Render rows for the sections table */}
+          <SectionRows data={sections.data} />
+        </CustomTable>
+      </ContentLayout>
     </>
   );
 }

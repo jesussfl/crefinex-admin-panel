@@ -5,7 +5,7 @@ import { LessonsPage, ExercisesPage, SectionsPage } from "../../pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "../../utils/contexts/ModalContext";
 import { AlertsProvider } from "../../utils/contexts/AlertsContext";
-import { ROUTES, APP_ROUTES } from "../../constants/routes.constants";
+import { ROUTES, APP_ROUTES } from "../../utils/constants/routes.constants";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -15,7 +15,6 @@ function App() {
         <AlertsProvider>
           <Switch>
             <Route path={APP_ROUTES.HOME} exact>
-              {/* Redirigir desde HomePage a ModulesPage con parámetros de URL */}
               <Redirect to={ROUTES.SECTIONS} />
             </Route>
             <Route path={APP_ROUTES.LESSONS} component={LessonsPage} exact />

@@ -1,5 +1,5 @@
 // Import the 'pluginId' from another module
-import pluginId from "../pluginId";
+import pluginId from "../../pluginId";
 
 // Define application routes using constants
 export const APP_ROUTES = {

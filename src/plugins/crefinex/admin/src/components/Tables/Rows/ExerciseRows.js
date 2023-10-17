@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton } from "@strapi/design-system";
 
 import { Trash } from "@strapi/icons";
-import { formatReadableDate } from "../../../utils/formatReadableDate";
+import { formatReadableDate } from "../../../utils/helpers/formatReadableDate";
 
 import { useModal } from "../../../utils/contexts/ModalContext";
 export function ExerciseRows({ data }) {
@@ -11,7 +11,6 @@ export function ExerciseRows({ data }) {
     <Tbody>
       {data.map((row) => {
         const attributes = row.attributes;
-        console.log(attributes.content);
         return (
           <Tr key={row.id}>
             <Td>

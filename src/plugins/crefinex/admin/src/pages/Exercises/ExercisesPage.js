@@ -5,20 +5,20 @@ import { useParams, useHistory } from "react-router-dom";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { ExercisesTable, CustomAlert, CustomLoader, CustomTable, ExercisesModal, DeleteDialog } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import { ExerciseRows } from "../../components/Tables/ByPages/ExerciseRows";
+import { ExerciseRows } from "../../components/Tables/Rows/ExerciseRows";
 
 // Importing utility hooks and functions
 import { useQuery } from "@tanstack/react-query";
 import { useModal } from "../../utils/contexts/ModalContext";
-import { QUERY_KEYS } from "../../constants/queryKeys.constants";
+import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
 import { usePagination } from "../../utils/hooks/usePagination";
-import { query } from "../../graphql/client/GraphQLCLient";
-import { queryExercisesByLessonId } from "../../graphql/queries/exercise.queries";
+import { query } from "../../utils/graphql/client/GraphQLCLient";
+import { queryExercisesByLessonId } from "../../utils/graphql/queries/exercise.queries";
 import {
   createExerciseMutation as createMutation,
   updateExerciseMutation as updateMutation,
   deleteExerciseMutation as deleteMutation,
-} from "../../graphql/mutations/exercise.mutations";
+} from "../../utils/graphql/mutations/exercise.mutations";
 
 function ExercisesPage() {
   const history = useHistory();

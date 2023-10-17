@@ -3,7 +3,7 @@ import pluginId from "../../../pluginId";
 import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/design-system";
 import { ArrowRight, Trash } from "@strapi/icons";
 import { useModal } from "../../../utils/contexts/ModalContext";
-import { CustomTable, DeleteDialog, ExercisesModal, TableHeaders } from "../../../components";
+import { CustomTable, DeleteDialog, ExercisesModal, TableHeaders } from "../..";
 
 export default function ExercisesTable({ data, actions, lessonId, lessonInfo }) {
   const isDataEmpty = data.isEmpty || data.data.length === 0;

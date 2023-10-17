@@ -8,6 +8,8 @@ export const querySections = gql`
         attributes {
           description
           order
+          content
+          contentTitle
           createdAt
           updatedAt
           publishedAt

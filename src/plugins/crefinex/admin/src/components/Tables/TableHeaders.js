@@ -17,17 +17,18 @@ const headerTranslations = {
   world: "Mundo",
   // ... Add more translations as needed
 };
-
+const avoidThisHeaders = ["content", "contentTitle"];
 export default function TableHeaders({ data }) {
   const headers = Object.keys(data[0]?.attributes) || [];
-
+  console.log("headers", headers);
+  const filteredHeaders = headers.filter((header) => !avoidThisHeaders.includes(header));
   return (
     <Thead>
       <Tr>
         <Th>
           <Typography variant="sigma">ID</Typography>
         </Th>
-        {headers.map((header, index) => (
+        {filteredHeaders.map((header, index) => (
           <Th key={index}>
             <Typography variant="sigma">{headerTranslations[header] || header}</Typography>
           </Th>

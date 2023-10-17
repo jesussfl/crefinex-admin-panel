@@ -4,15 +4,14 @@ import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { NavLink } from "react-router-dom";
 import { useModal } from "../../../utils/contexts/ModalContext";
-import { ROUTES } from "../../../constants/routes.constants";
-import { formatReadableDate } from "../../../utils/formatReadableDate";
+import { ROUTES } from "../../../utils/constants/routes.constants";
+import { formatReadableDate } from "../../../utils/helpers/formatReadableDate";
 export function SectionRows({ data }) {
-  const { setShowModal, setIdToEdit, setDataToEdit, setIdToDelete } = useModal();
+  const { modalHandler } = useModal();
   return (
     <Tbody>
       {data.map((row) => {
         const attributes = row.attributes;
-
         return (
           <Tr key={row.id}>
             <Td>
@@ -55,16 +54,15 @@ export function SectionRows({ data }) {
                 <Box paddingLeft={1}>
                   <IconButton
                     onClick={() => {
-                      setDataToEdit({ ...attributes, world: attributes.world.data.id });
-                      setIdToEdit(row.id), setShowModal(true);
+                      modalHandler.open("edit", row.id, { ...attributes, world: attributes.world.data.id });
                     }}
-                    label="Edit"
+                    label="Editar"
                     noBorder
                     icon={<Pencil />}
                   />
                 </Box>
                 <Box paddingLeft={1}>
-                  <IconButton onClick={() => setIdToDelete(row.id)} label="Delete" noBorder icon={<Trash />} />
+                  <IconButton onClick={() => modalHandler.open("delete", row.id)} label="Eliminar" noBorder icon={<Trash />} />
                 </Box>
               </Flex>
             </Td>

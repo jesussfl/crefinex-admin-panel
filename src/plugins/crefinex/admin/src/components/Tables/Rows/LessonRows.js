@@ -3,9 +3,9 @@ import { Box, Flex, Typography, Tbody, Tr, Td, IconButton, Link } from "@strapi/
 import { SimpleMenu, MenuItem } from "@strapi/design-system/v2";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { NavLink } from "react-router-dom";
-import { useModal } from "../../../utils/";
-import { ROUTES } from "../../../constants/routes.constants";
-import { formatReadableDate } from "../../../utils/formatReadableDate";
+import { useModal } from "../../../utils";
+import { ROUTES } from "../../../utils/constants/routes.constants";
+import { formatReadableDate } from "../../../utils/helpers/formatReadableDate";
 
 export function LessonRows({ data }) {
   const { setShowModal, setIdToEdit, setDataToEdit, setIdToDelete } = useModal();

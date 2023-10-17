@@ -5,17 +5,17 @@ import { Controller } from "react-hook-form";
 import { useCustomMutation, useModal } from "../../../utils";
 
 import { useQuery } from "@tanstack/react-query";
-import { queryWorlds } from "../../../graphql/queries/world.queries";
-import { query } from "../../../graphql/client/GraphQLCLient";
-import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
+import { queryWorlds } from "../../../utils/graphql/queries/world.queries";
+import { query } from "../../../utils/graphql/client/GraphQLCLient";
+import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
 import Wysiwyg from "../../Wysiwyg/Wysiwyg";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_WYSIWYG_LENGTH = 1000;
-export default function ModuleModal({ mainAction }) {
-  const { idToEdit: editId, setIdToEdit, dataToEdit: defaultValues, setDataToEdit, setShowModal } = useModal();
-  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.modules, mainAction, defaultValues);
+export default function SectionModal({ mainAction }) {
+  const { defaultValues, modalHandler } = useModal();
+  const { control, mutate, handleSubmit } = useCustomMutation(QUERY_KEYS.sections, mainAction, defaultValues);
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
 
   const onSubmit = handleSubmit((values) => {
@@ -28,14 +28,16 @@ export default function ModuleModal({ mainAction }) {
       publishedAt: new Date(),
     };
 
-    editId ? mutate({ id: editId, data: { ...data } }) : mutate({ data: { ...data } });
-    setDataToEdit(null);
-    setIdToEdit(null);
-    setShowModal(false);
+    if (modalHandler.type === "edit") {
+      mutate({ id: modalHandler.id, data: { ...data } });
+    } else {
+      mutate({ data: { ...data } });
+    }
+    modalHandler.close();
   });
 
   return (
-    <CustomModal handleSubmit={onSubmit} setIdToEdit={setIdToEdit}>
+    <CustomModal handleSubmit={onSubmit}>
       <TextInputControlled
         name="description"
         control={control}

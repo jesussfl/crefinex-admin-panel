@@ -3,7 +3,7 @@ import CustomModal from "../CustomModal";
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import { Controller } from "react-hook-form";
 import { useCustomMutation, useModal } from "../../../utils/";
-import { QUERY_KEYS } from "../../../constants/queryKeys.constants";
+import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 40; // Max description length

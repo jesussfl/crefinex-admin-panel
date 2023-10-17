@@ -4,20 +4,20 @@ import React from "react";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
 import { CustomAlert, CustomLoader, CustomTable, LessonModal, DeleteDialog } from "../../components";
-import { LessonRows } from "../../components/Tables/ByPages/LessonRows";
+import { LessonRows } from "../../components/Tables/Rows/LessonRows";
 
 // Importing utility hooks and functions
 import { useModal, usePagination } from "../../utils";
 import { useParams, useHistory } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS } from "../../constants/queryKeys.constants";
-import { query } from "../../graphql/client/GraphQLCLient";
-import { queryLessonsBySectionId } from "../../graphql/queries/lesson.queries";
+import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
+import { query } from "../../utils/graphql/client/GraphQLCLient";
+import { queryLessonsBySectionId } from "../../utils/graphql/queries/lesson.queries";
 import {
   createLessonMutation as createMutation,
   updateLessonMutation as updateMutation,
   deleteLessonMutation as deleteMutation,
-} from "../../graphql/mutations/lesson.mutations";
+} from "../../utils/graphql/mutations/lesson.mutations";
 
 function LessonsPage() {
   // Hooks and parameters

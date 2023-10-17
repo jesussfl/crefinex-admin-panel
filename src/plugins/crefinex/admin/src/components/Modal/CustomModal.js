@@ -3,24 +3,13 @@ import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button } 
 import { useModal } from "../../utils/contexts/ModalContext";
 
 export default function CustomModal({ children, handleSubmit }) {
-  // Access modal-related data using the modal hook
-  const { setShowModal, setIdToEdit, setDataToEdit, idToEdit } = useModal();
+  const { modalHandler } = useModal();
 
   return (
-    <ModalLayout
-      onClose={() => {
-        // Close the modal and reset editing data when the modal is closed
-        setIdToEdit(null);
-        setDataToEdit(null);
-        setShowModal(false);
-      }}
-      labelledBy="title"
-      as="form"
-    >
+    <ModalLayout labelledBy="title" as="form">
       <ModalHeader>
-        {/* Display the title based on whether it's an edit or add operation */}
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          {idToEdit ? "Edición de entrada" : "Adición de entrada"}
+          {modalHandler.type === "edit" ? "Editar entrada" : "Crear entrada"}
         </Typography>
       </ModalHeader>
 
@@ -30,24 +19,11 @@ export default function CustomModal({ children, handleSubmit }) {
 
       <ModalFooter
         startActions={
-          <Button
-            onClick={() => {
-              // Cancel button action: Reset editing data and close the modal
-              setIdToEdit(null);
-              setDataToEdit(null);
-              setShowModal(false);
-            }}
-            variant="tertiary"
-          >
+          <Button onClick={modalHandler.close} variant="tertiary">
             Cancelar
           </Button>
         }
-        endActions={
-          <Button onClick={handleSubmit}>
-            {/* Submit button label based on whether it's an edit or add operation */}
-            {idToEdit ? "Guardar edición" : "Guardar entrada"}
-          </Button>
-        }
+        endActions={<Button onClick={handleSubmit}>{modalHandler.type === "edit" ? "Guardar edición" : "Guardar entrada"}</Button>}
       />
     </ModalLayout>
   );

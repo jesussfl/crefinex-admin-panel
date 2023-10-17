@@ -1,18 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useAlerts } from "../contexts/AlertsContext";
-import { query } from "../../graphql/client/GraphQLCLient";
-import { convertWordToSingular } from "../convertWordToSingular";
-export const useCustomMutation = (queryKey, queryFunction, defaultValues) => {
-  defaultValues = defaultValues || {};
-
+import { query } from "../graphql/client/GraphQLCLient";
+import { convertWordToSingular } from "../helpers/convertWordToSingular";
+export const useCustomMutation = (queryKey, queryFunction, defaultValues = {}) => {
   const { showAlert } = useAlerts();
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: defaultValues });
+  } = useForm({ defaultValues });
 
   const queryClient = useQueryClient();
 

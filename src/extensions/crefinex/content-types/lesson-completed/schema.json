@@ -11,9 +11,6 @@
     "draftAndPublish": false
   },
   "attributes": {
-    "completed_date": {
-      "type": "datetime"
-    },
     "user": {
       "type": "relation",
       "relation": "manyToOne",

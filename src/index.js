@@ -1,9 +1,12 @@
-const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/graphql/modules/sections");
+const { resolvers: sectionsResolvers } = require("./plugins/crefinex/server/graphql/modules/sections.module");
 const { resolvers: lessonsBySectionResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonsBySection");
 const { resolvers: exerciseResolvers } = require("./plugins/crefinex/server/graphql/modules/exercise.module");
 const { resolvers: lessonsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/lessonCompleted.module");
 const { resolvers: sectionsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/sectionCompleted.module");
 const { resolvers: worldsCompletedResolvers } = require("./plugins/crefinex/server/graphql/modules/worldCompleted.module");
+const {
+  resolvers: lessonsCompletedMutationResolvers,
+} = require("./plugins/crefinex/server/graphql/modules/lessonCompletedMutation.module");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -35,6 +38,9 @@ module.exports = {
     extend type Query {
       worldsCompletedByUser(id:ID!, start:Int, limit:Int): WorldsCompletedByUser!
     }
+    extend type Mutation {
+      createOrUpdateLessonCompleted(user:ID!, lesson:ID!, data:CrefinexLessonCompletedInput): CreateOrUpdateLessonCompleted!
+    }
     type LessonsBySection {
       lessons: [CrefinexLessonEntity]
       pagination: Pagination
@@ -62,6 +68,10 @@ module.exports = {
       worldsCompleted: [CrefinexWorldCompletedEntity]
       pagination: Pagination
     }
+    type CreateOrUpdateLessonCompleted {
+      data: CrefinexLessonCompletedEntity
+    }
+    
     `;
     extensionService.use(({ strapi }) => ({
       typeDefs: Query,
@@ -73,6 +83,9 @@ module.exports = {
           ...lessonsCompletedResolvers,
           ...sectionsCompletedResolvers,
           ...worldsCompletedResolvers,
+        },
+        Mutation: {
+          ...lessonsCompletedMutationResolvers,
         },
       },
     }));

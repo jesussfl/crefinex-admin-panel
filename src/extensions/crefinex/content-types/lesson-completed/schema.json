@@ -21,6 +21,15 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::crefinex.lesson"
+    },
+    "timeSpent": {
+      "type": "string"
+    },
+    "mistakes": {
+      "type": "integer"
+    },
+    "errorExercises": {
+      "type": "json"
     }
   }
 }

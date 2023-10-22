@@ -40,6 +40,14 @@
       "type": "decimal",
       "required": true,
       "default": 1
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "gift",
+        "lesson",
+        "exam"
+      ]
     }
   }
 }

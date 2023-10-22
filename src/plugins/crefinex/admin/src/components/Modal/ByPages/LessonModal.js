@@ -31,6 +31,7 @@ export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
       section: sectionId,
       world: sectionInfo.world.data.id,
       publishedAt: new Date(),
+      type: values.type,
     };
     if (modalHandler.type === "edit") {
       const editMutationData = {
@@ -47,6 +48,17 @@ export default function LessonModal({ sectionInfo, sectionId, mainAction }) {
 
   return (
     <CustomModal handleSubmit={onSubmit}>
+      <SingleSelectControlled
+        name="type"
+        control={control}
+        rules={{ required: "Este campo es obligatorio" }}
+        placeholder="Selecciona el tipo de lección"
+        label="Tipo de lección"
+      >
+        <SingleSelectOption value="gift">Regalo</SingleSelectOption>
+        <SingleSelectOption value="lesson">Lección</SingleSelectOption>
+        <SingleSelectOption value="exam">Examen</SingleSelectOption>
+      </SingleSelectControlled>
       {/* Description input field */}
       <TextInputControlled
         name="description"

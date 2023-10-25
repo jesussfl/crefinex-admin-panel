@@ -1023,6 +1023,10 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'plugin::crefinex.section-completed'
     >;
+    streak_start_date: Attribute.DateTime;
+    streak_days: Attribute.Integer;
+    last_completed_lesson_date: Attribute.DateTime;
+    registration_date: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

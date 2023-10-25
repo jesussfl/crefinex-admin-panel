@@ -95,6 +95,18 @@
       "relation": "oneToMany",
       "target": "plugin::crefinex.section-completed",
       "mappedBy": "user"
+    },
+    "streak_start_date": {
+      "type": "datetime"
+    },
+    "streak_days": {
+      "type": "integer"
+    },
+    "last_completed_lesson_date": {
+      "type": "datetime"
+    },
+    "registration_date": {
+      "type": "datetime"
     }
   }
 }

@@ -25,6 +25,7 @@
     "graphql": "^15.5.0",
     "graphql-request": "^6.1.0",
     "node-postgres": "^0.6.2",
+    "node-schedule": "^2.1.1",
     "pg": "^8.11.3",
     "pg-connection-string": "^2.6.2",
     "react-hook-form": "^7.45.4",

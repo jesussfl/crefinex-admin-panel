@@ -19,8 +19,6 @@ const resolvers = {
         resourceUID: UID,
       });
 
-      console.log("##################", response, "##################");
-
       return response;
     },
   },
@@ -54,8 +52,6 @@ const resolvers = {
       //   args: { start: args.start, limit: args.limit },
       //   resourceUID: UID,
       // });
-
-      console.log("##################", data, "##################");
 
       return data;
     },

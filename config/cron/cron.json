@@ -1,0 +1,8 @@
+{
+    "maxStreakDays": 1,
+    "maxLives": 5,
+    "regenerationInterval": 14400000, 
+    "job1Rule": "0 0 * * *", 
+    "job2Rule": "*/50 * * * * *"
+  }
+  

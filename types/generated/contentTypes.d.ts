@@ -1027,6 +1027,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     streak_days: Attribute.Integer;
     last_completed_lesson_date: Attribute.DateTime;
     registration_date: Attribute.DateTime;
+    lost_life_date: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

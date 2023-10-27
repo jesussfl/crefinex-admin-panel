@@ -107,6 +107,9 @@
     },
     "registration_date": {
       "type": "datetime"
+    },
+    "lost_life_date": {
+      "type": "datetime"
     }
   }
 }

@@ -54,31 +54,4 @@ module.exports = {
     },
   },
   // ...
-  io: {
-    enabled: true,
-    config: {
-      IOServerOptions: {
-        cors: { origin: "http://localhost:1337", methods: ["GET"] },
-      },
-      contentTypes: {
-        user: "*",
-        lesson: "*",
-      },
-      events: [
-        {
-          name: "connection",
-          handler: ({ strapi }, socket) => {
-            strapi.log.info(`[io] new connection with id ${socket.id}`);
-          },
-        },
-        {
-          name: "updateUserLives",
-          handler: ({ strapi }, socket) => {
-            console.log(socket);
-            strapi.log.info(`[io] new user update with ${socket}`);
-          },
-        },
-      ],
-    },
-  },
 };

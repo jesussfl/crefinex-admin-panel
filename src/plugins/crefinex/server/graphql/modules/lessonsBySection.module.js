@@ -31,8 +31,6 @@ const resolvers = {
       //   resourceUID: UID,
       // });
 
-      console.log("##################", data, "##################");
-
       return data;
     },
   },

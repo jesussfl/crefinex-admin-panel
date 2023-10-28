@@ -33,7 +33,6 @@
     "react-quill": "^2.0.0",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
-    "strapi-plugin-io": "^1.1.4",
     "strapi-plugin-redis": "^1.0.1",
     "strapi-plugin-rest-cache": "^4.2.8",
     "strapi-provider-rest-cache-redis": "^4.2.8"

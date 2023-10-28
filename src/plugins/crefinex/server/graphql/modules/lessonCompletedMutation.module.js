@@ -11,13 +11,11 @@ const resolvers = {
       });
       console.log("existingLessonCompleted", existingLessonCompleted);
       if (existingLessonCompleted.results.length > 0) {
-        console.log("updateandooo");
         // Si ya existe, editar la lección completada existente
         const updatedLessonCompleted = await strapi.services[UID].update(existingLessonCompleted.results[0].id, { data: args.data });
 
         return { data: updatedLessonCompleted };
       } else {
-        console.log("creandoo");
         // Si no existe, crear una nueva lección completada
         const newLessonCompleted = await strapi.services[UID].create({ data: args.data });
 

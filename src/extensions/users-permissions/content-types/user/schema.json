@@ -75,7 +75,7 @@
     },
     "lives": {
       "type": "integer",
-      "default": 5,
+      "default": 6,
       "max": 6
     },
     "world_completeds": {
@@ -108,7 +108,7 @@
     "registration_date": {
       "type": "datetime"
     },
-    "lost_life_date": {
+    "next_life_regeneration": {
       "type": "datetime"
     }
   }

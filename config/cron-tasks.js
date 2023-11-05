@@ -1,30 +1,20 @@
-const { io } = require("socket.io-client");
-const SERVER_URL = "http://localhost:1337";
-const socket = io(SERVER_URL);
-
-//  wait until socket connects before adding event listeners
-socket.on("connect", () => {
-  socket.on("message:update", (data) => {
-    console.log(data);
-  });
-});
 const config = {
   maxStreakDays: 1,
   maxLives: 6,
   regenerationInterval: 14400000,
   job1Rule: "0 0 * * *",
-  job2Rule: "*/10 * * * * *",
+  job2Rule: "* * * * *",
 };
+const USERS_UID = "plugin::users-permissions.user";
 
 module.exports = {
-  myJob: {
+  checkUserStreaks: {
     task: async ({ strapi }) => {
-      const UID = "plugin::users-permissions.user";
       const limit = 1;
       let page = 1;
       let users;
       do {
-        users = await strapi.entityService.findMany(UID, {
+        users = await strapi.entityService.findMany(USERS_UID, {
           fields: ["id", "last_completed_lesson_date", "streak_days", "streak_start_date"],
           limit: limit,
           start: (page - 1) * limit,
@@ -42,7 +32,7 @@ module.exports = {
               user.streak_start_date = null;
             }
 
-            await strapi.entityService.update(UID, user.id, { data: user });
+            await strapi.entityService.update(USERS_UID, user.id, { data: user });
           }
         }
         page++;
@@ -53,41 +43,40 @@ module.exports = {
     },
   },
 
-  myJob2: {
+  regenerateLives: {
     task: async ({ strapi }) => {
-      const UID = "plugin::users-permissions.user";
       const limit = 100;
       let page = 1;
       let users;
+
+      strapi.log.info("Checking user next life regeneration dates...");
       do {
-        users = await strapi.entityService.findMany(UID, {
-          fields: ["id", "lost_life_date", "lives"],
+        users = await strapi.entityService.findMany(USERS_UID, {
+          fields: ["id", "next_life_regeneration", "lives"],
           limit: limit,
           start: (page - 1) * limit,
         });
 
         for (const user of users) {
-          if (user.lost_life_date) {
-            console.log("There is a lost life date");
-            const date = new Date(user.lost_life_date);
+          if (user.next_life_regeneration) {
+            const nextRegenerationTime = new Date(user.next_life_regeneration);
             const now = new Date();
-            const calculatedDate = new Date(date.getTime() + config.regenerationInterval);
-            console.log(calculatedDate);
-            if (calculatedDate < now && user.lives === config.maxLives - 1) {
-              console.log("Regenerating the user's life");
-              user.lost_life_date = null;
+
+            if (nextRegenerationTime < now && user.lives === config.maxLives - 1) {
+              // Regenerate the user's lives and reset the next regeneration date
+              user.next_life_regeneration = null;
               user.lives++;
-              await strapi.entityService.update(UID, user.id, { data: user });
-            } else if (calculatedDate < now && user.lives < config.maxLives - 1) {
-              console.log("Regenerating the user's life 2");
-              user.lost_life_date = new Date();
-              user.lives = user.lives + 1;
-              await strapi.entityService.update(UID, user.id, { data: user });
-            } else if (user.lives < 6) {
+              await strapi.entityService.update(USERS_UID, user.id, { data: user });
+              strapi.io.emit("updateLives", { lives: user.lives, next_life_regeneration: user.next_life_regeneration });
+
+              strapi.log.info(`User ${user.id} has regenerated their lives.`);
+            } else if (nextRegenerationTime < now && user.lives < config.maxLives - 1) {
+              // If the user has many lost lives, regenerate the user and a new next regeneration date
+              user.next_life_regeneration = new Date(new Date().getTime() + config.regenerationInterval);
               user.lives++;
-              console.log("Regenerating the user's life 3");
-              await strapi.entityService.update(UID, user.id, { data: user });
-              strapi.io.emit("updateLiveBro", user);
+              await strapi.entityService.update(USERS_UID, user.id, { data: user });
+              strapi.io.emit("updateLives", { lives: user.lives, next_life_regeneration: user.next_life_regeneration });
+              strapi.log.info(`User ${user.id} has regenerated one of their lives.`);
             }
           }
         }

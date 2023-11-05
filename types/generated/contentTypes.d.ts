@@ -1007,7 +1007,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMax<{
         max: 6;
       }> &
-      Attribute.DefaultTo<5>;
+      Attribute.DefaultTo<6>;
     world_completeds: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
@@ -1027,7 +1027,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     streak_days: Attribute.Integer;
     last_completed_lesson_date: Attribute.DateTime;
     registration_date: Attribute.DateTime;
-    lost_life_date: Attribute.DateTime;
+    next_life_regeneration: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

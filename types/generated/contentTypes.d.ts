@@ -647,7 +647,7 @@ export interface PluginCrefinexExercise extends Schema.CollectionType {
   };
   attributes: {
     type: Attribute.Enumeration<
-      ['completion', 'simpleSelection', 'wordsMemory']
+      ['completion', 'simpleSelection', 'wordsMemory', 'theory']
     >;
     lesson: Attribute.Relation<
       'plugin::crefinex.exercise',

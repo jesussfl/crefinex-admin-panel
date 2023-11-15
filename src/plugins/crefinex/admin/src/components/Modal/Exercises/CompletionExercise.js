@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { Button, TextInput } from "@strapi/design-system";
 import { Controller } from "react-hook-form";
 
@@ -100,4 +100,33 @@ function CompletionExercise({ control, onContentChange, exerciseContent }) {
   );
 }
 
+const TextInputControlled = forwardRef(({ name, control, rules, placeholder, label }, ref) => {
+  const [inputValue, setInputValue] = useState("");
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field: { onChange, onBlur, value }, fieldState }) => (
+        <TextInput
+          onChange={(e) => {
+            const newValue = e.target.value;
+            // Verificar la longitud del valor y truncarlo si es necesario
+            if (newValue.length <= MAX_DESCRIPTION_LENGTH) {
+              setInputValue(newValue);
+              onChange(newValue);
+            }
+          }}
+          onBlur={onBlur}
+          value={inputValue || value}
+          ref={ref}
+          placeholder={placeholder}
+          label={label}
+          hint={`${MAX_DESCRIPTION_LENGTH} carácteres como máximo`}
+          error={fieldState.error?.message}
+        />
+      )}
+    />
+  );
+});
 export default CompletionExercise;

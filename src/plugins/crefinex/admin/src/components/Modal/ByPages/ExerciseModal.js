@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import CustomModal from "../CustomModal";
 import { Button, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import { Controller, useForm } from "react-hook-form";
@@ -6,11 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SimpleSelectionExercise from "../Exercises/SimpleSelectionExercise";
 import CompletionExercise from "../Exercises/CompletionExercise";
 import WordMemoryExercise from "../Exercises/WordMemoryExercise";
+import TheoryExercise from "../Exercises/TheoryExercise";
 import { useModal } from "../../../utils";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
 import { useAlerts } from "../../../utils/contexts/AlertsContext";
 import { query } from "../../../utils/graphql/client/GraphQLCLient";
-
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_EXERCISE_ORDER = 100;
 
@@ -35,10 +35,15 @@ export default function ExercisesModal({ lessonId, mainAction }) {
       return <WordMemoryExercise control={control} onContentChange={setExerciseContent} exerciseContent={exerciseContent} />;
     } else if (watch("type") === "simpleSelection") {
       return <SimpleSelectionExercise onContentChange={(content) => setExerciseContent(content)} />;
+    } else if (watch("type") === "theory") {
+      return <TheoryExercise control={control} onContentChange={setExerciseContent} exerciseContent={exerciseContent} />;
     }
     return null;
   };
-
+  console.log("exerciseContent", exerciseContent);
+  useEffect(() => {
+    setExerciseContent({});
+  }, [watch("type")]);
   const onSubmit = handleSubmit((data) => {
     const exercise = {
       data: {
@@ -79,6 +84,7 @@ export default function ExercisesModal({ lessonId, mainAction }) {
         <SingleSelectOption value="completion">Completar</SingleSelectOption>
         <SingleSelectOption value="wordsMemory">Memoria de palabras</SingleSelectOption>
         <SingleSelectOption value="simpleSelection">Seleccion Simple</SingleSelectOption>
+        <SingleSelectOption value="theory">Teoria</SingleSelectOption>
       </SingleSelectControlled>
 
       <SingleSelectControlled

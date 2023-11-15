@@ -28,7 +28,6 @@ function SimpleSelectionExercise({ onContentChange }) {
     options: [], // Array to store answer options
     correctAnswerIndex: null, // Index of the correct answer
   });
-  console.log("content ", content);
   const [correctOptions, setCorrectOptions] = useState([]); // Array to store indices of correct answers
 
   // Function to add a new answer option

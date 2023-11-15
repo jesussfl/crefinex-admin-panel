@@ -17,7 +17,8 @@
       "enum": [
         "completion",
         "simpleSelection",
-        "wordsMemory"
+        "wordsMemory",
+        "theory"
       ]
     },
     "lesson": {

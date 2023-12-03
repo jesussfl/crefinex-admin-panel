@@ -3,7 +3,7 @@ import { GraphQLClient } from "graphql-request";
 // Create a GraphQL client instance with the provided URL and API key
 const client = new GraphQLClient(`${process.env.STRAPI_ADMIN_PUBLIC_URL}/graphql`, {
   headers: {
-    authorization: `${process.env.STRAPI_ADMIN_API_KEY}`,
+    authorization: `Bearer ${process.env.STRAPI_ADMIN_API_KEY}`,
   },
 });
 

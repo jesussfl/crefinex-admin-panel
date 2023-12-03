@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
-import { CustomAlert, CustomLoader, SectionModal, DeleteDialog, CustomTable } from "../../components";
-import { SectionRows } from "../../components/Tables/Rows/SectionRows";
+import { CustomAlert, CustomLoader, SectionModal, DeleteDialog } from "../../components";
 import { createSectionMutation, updateSectionMutation, deleteSectionMutation } from "../../utils/graphql/mutations/section.mutations";
-
 import { Plus } from "@strapi/icons";
 import { usePagination, useModal } from "../../utils";
 
@@ -13,25 +11,41 @@ import { useQuery } from "@tanstack/react-query";
 import { querySections } from "../../utils/graphql/queries/section.queries";
 import { query } from "../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
+import defaultColumns from "./columns";
+import CustomTable from "./table";
+const formatData = (data) => {
+  if (!data) {
+    return [];
+  }
 
+  return data.map((section) => {
+    return {
+      id: section.id,
+      ...section.attributes,
+    };
+  });
+};
 function SectionsPage() {
   // Get current page and rows per page for pagination
   const { currentPage, rowsPerPage } = usePagination();
   const { modalHandler } = useModal();
-
+  const [tableData, setTableData] = React.useState([]);
   // Fetch data for sections using React Query
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections, currentPage, rowsPerPage], () =>
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections], () =>
     query(querySections, {
       start: currentPage,
       limit: rowsPerPage,
     })
   );
-  const { sections } = isLoading ? {} : data;
 
+  useEffect(() => {
+    setTableData(formatData(data?.sections?.data));
+  }, [data]);
+
+  if (isLoading && !tableData) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
-  if (isLoading && !data) return <CustomLoader />;
   return (
-    <>
+    <div style={{ width: "83vw" }}>
       <BaseHeaderLayout
         title="Secciones"
         subtitle="Aquí podrás añadir las secciones de los mundos creados."
@@ -44,23 +58,12 @@ function SectionsPage() {
         }
       />
       <ContentLayout>
-        <CustomTable
-          config={{
-            tableName: "sections",
-            emptyStateMessage: "No hay secciones aún",
-            createModal: () => <SectionModal mainAction={createSectionMutation} />,
-            editModal: () => <SectionModal mainAction={updateSectionMutation} />,
-            deleteDialog: () => <DeleteDialog mainAction={deleteSectionMutation} section={"sections"} />,
-          }}
-          // Pass data and pagination information to the CustomTable component
-          data={sections.data}
-          paginationData={sections.meta.pagination}
-        >
-          {/* Render rows for the sections table */}
-          <SectionRows data={sections.data} />
-        </CustomTable>
+        <CustomTable data={tableData} columns={defaultColumns()} />
+        {modalHandler.type === "create" && <SectionModal mainAction={createSectionMutation} />}
+        {modalHandler.type === "edit" && <SectionModal mainAction={updateSectionMutation} />}
+        {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSectionMutation} section={"sections"} />}
       </ContentLayout>
-    </>
+    </div>
   );
 }
 

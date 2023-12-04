@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Link, IconButton, Box } from "@strapi/design-system";
+import { Flex, Link, IconButton, Box, Td } from "@strapi/design-system";
 import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
@@ -14,18 +14,18 @@ const defaultColumns = () => {
       cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),
-    columnHelper.accessor("description", {
-      header: "Descripción",
-      cell: (info) => info.getValue(),
-      footer: (info) => info.column.id,
-    }),
-    columnHelper.accessor("world", {
-      header: "Mundo",
-      cell: (info) => info.getValue().data.id,
+    columnHelper.accessor("content", {
+      header: "Contenido JSON",
+      cell: (info) => <Td style={{ whiteSpace: "pre-wrap" }}>{info.getValue()}</Td>,
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor("order", {
       header: "Orden",
+      cell: (info) => info.getValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor("type", {
+      header: "Tipo",
       cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),
@@ -51,19 +51,6 @@ const defaultColumns = () => {
       cell: (info) => (
         <>
           <Flex style={{ justifyContent: "end" }}>
-            <Link to={ROUTES.LESSON(info.row.original.id)}>
-              <IconButton label="Go to Lessons" noBorder icon={<ArrowRight />} />
-            </Link>
-            <Box paddingLeft={1}>
-              <IconButton
-                onClick={() =>
-                  modalHandler.open("edit", info.row.original.id, { ...info.row.original, world: info.row.original.world.data.id })
-                }
-                label="Editar"
-                noBorder
-                icon={<Pencil />}
-              />
-            </Box>
             <Box paddingLeft={1}>
               <IconButton onClick={() => modalHandler.open("delete", info.row.original.id)} label="Eliminar" noBorder icon={<Trash />} />
             </Box>

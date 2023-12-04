@@ -12,19 +12,8 @@ import { querySections } from "../../utils/graphql/queries/section.queries";
 import { query } from "../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
 import defaultColumns from "./columns";
-import CustomTable from "./table";
-const formatData = (data) => {
-  if (!data) {
-    return [];
-  }
-
-  return data.map((section) => {
-    return {
-      id: section.id,
-      ...section.attributes,
-    };
-  });
-};
+import CustomTable from "../../components/table";
+import { formatData } from "../../utils/helpers/reduceAttributesFromData";
 function SectionsPage() {
   // Get current page and rows per page for pagination
   const { currentPage, rowsPerPage } = usePagination();
@@ -45,13 +34,12 @@ function SectionsPage() {
   if (isLoading && !tableData) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
-    <div style={{ width: "83vw" }}>
+    <div style={{ width: "83vw", marginBottom: "48px" }}>
       <BaseHeaderLayout
         title="Secciones"
         subtitle="Aquí podrás añadir las secciones de los mundos creados."
         as="h2"
         primaryAction={
-          // Button to open a modal for adding a new section
           <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
             Añadir sección
           </Button>

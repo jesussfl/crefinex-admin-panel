@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  PaginationState,
-  getFilteredRowModel,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
-import { Button, Flex, SingleSelect, SingleSelectOption, Table, Thead, Tr, Th, Td, Tbody, TFooter, TextInput } from "@strapi/design-system";
-import { Plus } from "@strapi/icons";
-import { Pagination, PreviousLink, PageLink, NextLink } from "@strapi/design-system/v2";
+import { useReactTable, getCoreRowModel, flexRender, getFilteredRowModel, getPaginationRowModel } from "@tanstack/react-table";
+import { Button, Flex, SingleSelect, SingleSelectOption, Table, Thead, Tr, Th, Td, Tbody, TextInput } from "@strapi/design-system";
 
 function CustomTable({ data, columns }) {
   const table = useReactTable({
@@ -21,13 +12,7 @@ function CustomTable({ data, columns }) {
   });
   return (
     <>
-      <Table
-        footer={
-          <TFooter onClick={() => modalHandler.open("create")} icon={<Plus />}>
-            Añadir entrada
-          </TFooter>
-        }
-      >
+      <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
@@ -47,7 +32,7 @@ function CustomTable({ data, columns }) {
           ))}
         </Tbody>
       </Table>
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" alignItems="flex-end">
         <Flex style={{ gap: 4 }}>
           <Button className="border rounded p-1" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
             {"<<"}
@@ -72,7 +57,7 @@ function CustomTable({ data, columns }) {
             {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
           </strong>
         </span>
-        <Flex style={{ gap: 4, alignItems: "center" }}>
+        <Flex style={{ gap: 4, alignItems: "flex-end", marginTop: "0.8rem" }}>
           <TextInput
             label="Ir a la pagina"
             type="number"

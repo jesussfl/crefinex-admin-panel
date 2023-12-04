@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 // Importing components and icons
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
-import { ExercisesTable, CustomAlert, CustomLoader, CustomTable, ExercisesModal, DeleteDialog } from "../../components";
+import { CustomAlert, CustomLoader, ExercisesModal, DeleteDialog } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import { ExerciseRows } from "../../components/Tables/Rows/ExerciseRows";
 
 // Importing utility hooks and functions
 import { useQuery } from "@tanstack/react-query";
@@ -16,15 +15,17 @@ import { query } from "../../utils/graphql/client/GraphQLCLient";
 import { queryExercisesByLessonId } from "../../utils/graphql/queries/exercise.queries";
 import {
   createExerciseMutation as createMutation,
-  updateExerciseMutation as updateMutation,
   deleteExerciseMutation as deleteMutation,
 } from "../../utils/graphql/mutations/exercise.mutations";
-
+import CustomTable from "../../components/table";
+import defaultColumns from "./columns";
+import { formatData } from "../../utils/helpers/reduceAttributesFromData";
 function ExercisesPage() {
   const history = useHistory();
   const { lessonId } = useParams();
   const { currentPage, rowsPerPage } = usePagination();
-
+  const [tableData, setTableData] = React.useState([]);
+  const { modalHandler, setShowModal } = useModal();
   // Fetch data for exercises using React Query
   const {
     data: exercisesData,
@@ -37,8 +38,10 @@ function ExercisesPage() {
       limit: rowsPerPage,
     })
   );
-  const { setShowModal } = useModal();
 
+  useEffect(() => {
+    setTableData(formatData(exercisesData?.exercisesByLesson?.exercises));
+  }, [exercisesData]);
   if (isLoading) return <CustomLoader />;
 
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
@@ -49,7 +52,7 @@ function ExercisesPage() {
   const world = exercises.lesson?.world?.data?.attributes.name;
 
   return (
-    <>
+    <div style={{ width: "83vw", marginBottom: "48px" }}>
       <BaseHeaderLayout
         navigationAction={
           <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
@@ -58,7 +61,7 @@ function ExercisesPage() {
         }
         primaryAction={
           // Button to open a modal for adding a new exercise
-          <Button startIcon={<Plus />} onClick={() => setShowModal(true)}>
+          <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
             Añadir un ejercicio
           </Button>
         }
@@ -75,26 +78,11 @@ function ExercisesPage() {
       />
 
       <ContentLayout>
-        <CustomTable
-          // Custom table configuration
-          config={{
-            tableName: "exercises",
-            emptyStateMessage: "No hay ejercicios aún",
-            createModal: () => <ExercisesModal mainAction={createMutation} data={lessonInfo} lessonId={lessonId} />,
-            editModal: () => <ExercisesModal mainAction={updateMutation} data={lessonInfo} lessonId={lessonId} />,
-            deleteDialog: () => <DeleteDialog mainAction={deleteMutation} section={"exercises"} />,
-          }}
-          // Pass data and pagination information to the CustomTable component
-          data={exercises.exercises}
-          paginationData={exercises.pagination}
-          lessonId={lessonId}
-          lessonInfo={lessonInfo}
-        >
-          {/* Render rows for the exercises table */}
-          <ExerciseRows data={exercises.exercises} />
-        </CustomTable>
+        <CustomTable data={tableData} columns={defaultColumns()} />
+        {modalHandler.type === "create" && <ExercisesModal mainAction={createMutation} data={lessonInfo} lessonId={lessonId} />}
+        {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteMutation} section={"exercises"} />}
       </ContentLayout>
-    </>
+    </div>
   );
 }
 

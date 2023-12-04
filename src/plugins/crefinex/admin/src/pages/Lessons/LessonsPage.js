@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Importing components and icons
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import { CustomAlert, CustomLoader, CustomTable, LessonModal, DeleteDialog } from "../../components";
-import { LessonRows } from "../../components/Tables/Rows/LessonRows";
+import { CustomAlert, CustomLoader, LessonModal, DeleteDialog } from "../../components";
 
 // Importing utility hooks and functions
 import { useModal, usePagination } from "../../utils";
@@ -18,79 +17,61 @@ import {
   updateLessonMutation as updateMutation,
   deleteLessonMutation as deleteMutation,
 } from "../../utils/graphql/mutations/lesson.mutations";
+import { formatData } from "../../utils/helpers/reduceAttributesFromData";
+import CustomTable from "../../components/table";
+import defaultColumns from "./columns";
 
 function LessonsPage() {
-  // Hooks and parameters
   const history = useHistory();
   const { sectionId } = useParams();
   const { modalHandler } = useModal();
   const { currentPage, rowsPerPage } = usePagination();
+  const [tableData, setTableData] = React.useState([]);
 
-  // Fetch data for lessons using React Query
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.lessons, sectionId, currentPage, rowsPerPage], () =>
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.lessons, sectionId], () =>
     query(queryLessonsBySectionId, { id: sectionId, start: currentPage, limit: rowsPerPage })
   );
+  useEffect(() => {
+    console.log(formatData(data?.lessonsBySection?.lessons));
+    setTableData(formatData(data?.lessonsBySection?.lessons));
+  }, [data]);
 
-  // Constants for data from the query response
   const { lessonsBySection } = isLoading ? {} : data;
-  const lessons = lessonsBySection?.lessons;
   const sectionInfo = lessonsBySection?.section;
+
   const world = lessonsBySection?.section?.world?.data?.attributes?.name;
 
-  // Display error message if there is an error
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
-
+  if (isLoading) return <CustomLoader />;
   return (
-    <>
-      {isLoading ? (
-        // Show a loader while data is being fetched
-        <CustomLoader />
-      ) : (
-        <>
-          <BaseHeaderLayout
-            // Header layout with navigation and primary actions
-            navigationAction={
-              <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
-                Volver
-              </Link>
-            }
-            primaryAction={
-              // Button to open a modal for adding a new lesson
-              <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
-                Añadir una lección
-              </Button>
-            }
-            title="Lecciones"
-            subtitle={
-              // Breadcrumbs displaying navigation path
-              <Breadcrumbs label="folders">
-                <Crumb>{`Mundo: ${world}`}</Crumb>
-                <Crumb>{`Sección: ${lessonsBySection.section?.description} (ID: ${sectionId})`}</Crumb>
-              </Breadcrumbs>
-            }
-            as="h2"
-          />
-          <ContentLayout>
-            <CustomTable
-              // Custom table configuration
-              config={{
-                tableName: "lessons",
-                emptyStateMessage: "No hay lecciones aún",
-                createModal: () => <LessonModal mainAction={createMutation} sectionInfo={sectionInfo} sectionId={sectionId} />,
-                editModal: () => <LessonModal sectionInfo={sectionInfo} sectionId={sectionId} mainAction={updateMutation} />,
-                deleteDialog: () => <DeleteDialog mainAction={deleteMutation} section={"lessons"} />,
-              }}
-              // Pass data and pagination information to the CustomTable component
-              data={lessons}
-              paginationData={lessonsBySection.pagination}
-            >
-              {/* Render rows for the lessons table */}
-              <LessonRows data={lessons} />
-            </CustomTable>
-          </ContentLayout>
-        </>
-      )}
-    </>
+    <div style={{ width: "83vw", marginBottom: "48px" }}>
+      <BaseHeaderLayout
+        navigationAction={
+          <Link startIcon={<ArrowLeft />} onClick={() => history.goBack()}>
+            Volver
+          </Link>
+        }
+        primaryAction={
+          <Button startIcon={<Plus />} onClick={() => modalHandler.open("create")}>
+            Añadir una lección
+          </Button>
+        }
+        title="Lecciones"
+        subtitle={
+          <Breadcrumbs label="folders">
+            <Crumb>{`Mundo: ${world}`}</Crumb>
+            <Crumb>{`Sección: ${lessonsBySection.section?.description} (ID: ${sectionId})`}</Crumb>
+          </Breadcrumbs>
+        }
+        as="h2"
+      />
+      <ContentLayout>
+        <CustomTable data={tableData} columns={defaultColumns()} />
+        {modalHandler.type === "create" && <LessonModal mainAction={createMutation} sectionInfo={sectionInfo} sectionId={sectionId} />}
+        {modalHandler.type === "edit" && <LessonModal sectionInfo={sectionInfo} sectionId={sectionId} mainAction={updateMutation} />}
+        {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteMutation} section={"lessons"} />}
+      </ContentLayout>
+    </div>
   );
 }
 

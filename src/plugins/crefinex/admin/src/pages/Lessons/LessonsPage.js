@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // Importing components and icons
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
@@ -8,10 +8,7 @@ import { CustomAlert, CustomLoader, LessonModal, DeleteDialog } from "../../comp
 // Importing utility hooks and functions
 import { useModal, usePagination } from "../../utils";
 import { useParams, useHistory } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
-import { query } from "../../utils/graphql/client/GraphQLCLient";
-import { queryLessonsBySectionId } from "../../utils/graphql/queries/lesson.queries";
+
 import {
   createLessonMutation as createMutation,
   updateLessonMutation as updateMutation,
@@ -20,19 +17,17 @@ import {
 import { formatData } from "../../utils/helpers/reduceAttributesFromData";
 import CustomTable from "../../components/table";
 import defaultColumns from "./columns";
-
+import { useGetLessonsBySection } from "../../utils/hooks/useFetchData";
 function LessonsPage() {
+  const [tableData, setTableData] = useState([]);
+
   const history = useHistory();
   const { sectionId } = useParams();
   const { modalHandler } = useModal();
   const { currentPage, rowsPerPage } = usePagination();
-  const [tableData, setTableData] = React.useState([]);
+  const { data, isLoading, error } = useGetLessonsBySection(sectionId, currentPage, rowsPerPage);
 
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.lessons, sectionId], () =>
-    query(queryLessonsBySectionId, { id: sectionId, start: currentPage, limit: rowsPerPage })
-  );
   useEffect(() => {
-    console.log(formatData(data?.lessonsBySection?.lessons));
     setTableData(formatData(data?.lessonsBySection?.lessons));
   }, [data]);
 
@@ -41,8 +36,8 @@ function LessonsPage() {
 
   const world = lessonsBySection?.section?.world?.data?.attributes?.name;
 
-  if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   if (isLoading) return <CustomLoader />;
+  if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
     <div style={{ width: "83vw", marginBottom: "48px" }}>
       <BaseHeaderLayout

@@ -1,8 +1,26 @@
 import React from "react";
 import { useReactTable, getCoreRowModel, flexRender, getFilteredRowModel, getPaginationRowModel } from "@tanstack/react-table";
-import { Button, Flex, SingleSelect, SingleSelectOption, Table, Thead, Tr, Th, Td, Tbody, TextInput } from "@strapi/design-system";
+import {
+  Button,
+  Flex,
+  SingleSelect,
+  SingleSelectOption,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Td,
+  Tbody,
+  TextInput,
+  EmptyStateLayout,
+} from "@strapi/design-system";
+import { useModal } from "../utils/contexts/ModalContext";
+import { Illo } from "../components/Illo";
+import { Plus } from "@strapi/icons";
 
-function CustomTable({ data, columns }) {
+function CustomTable({ data, columns, emptyStateMessage }) {
+  const { modalHandler } = useModal();
+
   const table = useReactTable({
     data,
     columns,
@@ -10,6 +28,20 @@ function CustomTable({ data, columns }) {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  if (!data || data.length === 0) {
+    return (
+      <EmptyStateLayout
+        icon={<Illo />}
+        content={emptyStateMessage}
+        action={
+          <Button onClick={() => modalHandler.open("create")} variant="secondary" startIcon={<Plus />}>
+            Agregar
+          </Button>
+        }
+      />
+    );
+  }
   return (
     <>
       <Table>

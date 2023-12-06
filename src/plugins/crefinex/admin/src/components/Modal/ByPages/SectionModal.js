@@ -20,6 +20,7 @@ export default function SectionModal({ mainAction }) {
   const { control, handleSubmit } = useForm({ defaultValues });
   const { showAlert } = useAlerts();
   const queryClient = useQueryClient();
+  console.log(queryClient.getQueryState());
   const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
     onSuccess: () => {
       queryClient.invalidateQueries(QUERY_KEYS.sections);

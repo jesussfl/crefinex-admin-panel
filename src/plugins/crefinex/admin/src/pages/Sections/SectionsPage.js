@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
 import { CustomAlert, CustomLoader, SectionModal, DeleteDialog } from "../../components";
@@ -6,26 +6,17 @@ import { createSectionMutation, updateSectionMutation, deleteSectionMutation } f
 import { Plus } from "@strapi/icons";
 import { usePagination, useModal } from "../../utils";
 
-// Queries
-import { useQuery } from "@tanstack/react-query";
-import { querySections } from "../../utils/graphql/queries/section.queries";
-import { query } from "../../utils/graphql/client/GraphQLCLient";
-import { QUERY_KEYS } from "../../utils/constants/queryKeys.constants";
 import defaultColumns from "./columns";
 import CustomTable from "../../components/table";
 import { formatData } from "../../utils/helpers/reduceAttributesFromData";
+
+import { useGetSections } from "../../utils/hooks/useFetchData";
 function SectionsPage() {
-  // Get current page and rows per page for pagination
+  const [tableData, setTableData] = useState([]);
+
   const { currentPage, rowsPerPage } = usePagination();
   const { modalHandler } = useModal();
-  const [tableData, setTableData] = React.useState([]);
-  // Fetch data for sections using React Query
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections], () =>
-    query(querySections, {
-      start: currentPage,
-      limit: rowsPerPage,
-    })
-  );
+  const { data, isLoading, error } = useGetSections(currentPage, rowsPerPage);
 
   useEffect(() => {
     setTableData(formatData(data?.sections?.data));

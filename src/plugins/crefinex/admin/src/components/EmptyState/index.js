@@ -3,7 +3,7 @@ import { Illo } from "../../components/Illo";
 import { EmptyStateLayout, Button } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import { useModal } from "../../utils/contexts/ModalContext";
-export default function EmptyState({ message, renderActionModal }) {
+export default function EmptyState({ message }) {
   const { modalHandler } = useModal();
   return (
     <>
@@ -16,7 +16,7 @@ export default function EmptyState({ message, renderActionModal }) {
           </Button>
         }
       />
-      {modalHandler.type === "create" && renderActionModal()}
+      {/* {modalHandler.type === "create" && renderActionModal()} */}
     </>
   );
 }

@@ -19,6 +19,7 @@
     "@strapi/plugin-i18n": "4.15.5",
     "@strapi/plugin-users-permissions": "4.15.5",
     "@strapi/strapi": "4.15.5",
+    "@surunnuage/strapi-plugin-expo-notifications": "^1.0.7",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-table": "^8.10.7",
     "better-sqlite3": "8.5.0",

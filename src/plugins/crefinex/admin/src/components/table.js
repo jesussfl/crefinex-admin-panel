@@ -43,7 +43,7 @@ function CustomTable({ data, columns, emptyStateMessage }) {
     );
   }
   return (
-    <>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
       <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -115,7 +115,7 @@ function CustomTable({ data, columns, emptyStateMessage }) {
           </SingleSelect>
         </Flex>
       </Flex>
-    </>
+    </div>
   );
 }
 

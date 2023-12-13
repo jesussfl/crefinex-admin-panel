@@ -17,6 +17,9 @@ module.exports = {
       shadowCRUD: true,
     },
   },
+  "expo-notifications": {
+    enabled: true,
+  },
   // Step 1: Configure the redis connection
   // @see https://github.com/strapi-community/strapi-plugin-redis
   // redis: {

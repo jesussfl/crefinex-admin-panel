@@ -25,7 +25,16 @@ function SectionsPage() {
   if (isLoading && !tableData) return <CustomLoader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
-    <div style={{ width: "83vw", marginBottom: "48px" }}>
+    <div
+      style={{
+        maxWidth: "88vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: " 0 56px 56px 56px",
+      }}
+    >
       <BaseHeaderLayout
         title="Secciones"
         subtitle="Aquí podrás añadir las secciones de los mundos creados."
@@ -36,12 +45,12 @@ function SectionsPage() {
           </Button>
         }
       />
-      <ContentLayout>
+      <div style={{ height: "100%" }}>
         <CustomTable data={tableData} columns={defaultColumns()} />
         {modalHandler.type === "create" && <SectionModal mainAction={createSectionMutation} />}
         {modalHandler.type === "edit" && <SectionModal mainAction={updateSectionMutation} />}
         {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSectionMutation} section={"sections"} />}
-      </ContentLayout>
+      </div>
     </div>
   );
 }

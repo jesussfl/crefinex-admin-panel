@@ -824,6 +824,52 @@ export interface PluginCrefinexSectionCompleted extends Schema.CollectionType {
   };
 }
 
+export interface PluginExpoNotificationsExponotification
+  extends Schema.CollectionType {
+  collectionName: 'exponotifications';
+  info: {
+    singularName: 'exponotification';
+    pluralName: 'exponotifications';
+    displayName: 'Expo notification';
+  };
+  options: {
+    draftAndPublish: false;
+    comment: '';
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    'content-type-builder': {
+      visible: 'false';
+    };
+  };
+  attributes: {
+    title: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    subtitle: Attribute.String;
+    data: Attribute.JSON;
+    receivers: Attribute.JSON;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::expo-notifications.exponotification',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::expo-notifications.exponotification',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginI18NLocale extends Schema.CollectionType {
   collectionName: 'i18n_locale';
   info: {
@@ -1028,6 +1074,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     last_completed_lesson_date: Attribute.DateTime;
     registration_date: Attribute.DateTime;
     next_life_regeneration: Attribute.DateTime;
+    expoPushToken: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1065,6 +1112,7 @@ declare module '@strapi/types' {
       'plugin::crefinex.lesson-completed': PluginCrefinexLessonCompleted;
       'plugin::crefinex.exercise-completed': PluginCrefinexExerciseCompleted;
       'plugin::crefinex.section-completed': PluginCrefinexSectionCompleted;
+      'plugin::expo-notifications.exponotification': PluginExpoNotificationsExponotification;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;

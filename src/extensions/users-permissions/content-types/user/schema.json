@@ -110,6 +110,9 @@
     },
     "next_life_regeneration": {
       "type": "datetime"
+    },
+    "expoPushToken": {
+      "type": "string"
     }
   }
 }

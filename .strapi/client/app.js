@@ -5,6 +5,7 @@
 import graphql from "@strapi/plugin-graphql/strapi-admin";
 import i18N from "@strapi/plugin-i18n/strapi-admin";
 import usersPermissions from "@strapi/plugin-users-permissions/strapi-admin";
+import expoNotifications from "@surunnuage/strapi-plugin-expo-notifications/strapi-admin";
 import crefinex from "../../src/plugins/crefinex/strapi-admin";
 import { renderAdmin } from "@strapi/strapi/admin";
 
@@ -16,6 +17,7 @@ renderAdmin(document.getElementById("strapi"), {
     graphql: graphql,
     i18n: i18N,
     "users-permissions": usersPermissions,
+    "expo-notifications": expoNotifications,
     crefinex: crefinex,
   },
 });

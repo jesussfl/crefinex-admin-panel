@@ -21,9 +21,13 @@ import { Plus } from "@strapi/icons";
 function CustomTable({ data, columns, emptyStateMessage }) {
   const { modalHandler } = useModal();
 
+  //memoized columns
+
+  const tableColumns = React.useMemo(() => columns, [columns]);
+
   const table = useReactTable({
     data,
-    columns,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

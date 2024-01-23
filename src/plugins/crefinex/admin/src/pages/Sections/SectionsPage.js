@@ -1,28 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { BaseHeaderLayout, ContentLayout, Button } from "@strapi/design-system";
-import { CustomAlert, CustomLoader, SectionModal, DeleteDialog } from "../../components";
-import { createSectionMutation, updateSectionMutation, deleteSectionMutation } from "../../utils/graphql/mutations/section.mutations";
+import { BaseHeaderLayout, Button } from "@strapi/design-system";
+import { CustomAlert, Loader, DeleteDialog } from "../../components";
+import { deleteSection } from "../../utils/graphql/mutations/section.mutations";
 import { Plus } from "@strapi/icons";
-import { usePagination, useModal } from "../../utils";
+import { useModal } from "../../utils";
 
 import defaultColumns from "./columns";
 import CustomTable from "../../components/table";
-import { formatData } from "../../utils/helpers/reduceAttributesFromData";
 
-import { useGetSections } from "../../utils/hooks/useFetchData";
+import { getSections } from "../../utils/data/getData";
+import SectionForm from "./components/form";
 function SectionsPage() {
-  const [tableData, setTableData] = useState([]);
+  const { modalHandler, showModal, defaultValues } = useModal();
+  const { sections, isLoading, error } = getSections();
 
-  const { currentPage, rowsPerPage } = usePagination();
-  const { modalHandler } = useModal();
-  const { data, isLoading, error } = useGetSections(currentPage, rowsPerPage);
-
-  useEffect(() => {
-    setTableData(formatData(data?.sections?.data));
-  }, [data]);
-
-  if (isLoading && !tableData) return <CustomLoader />;
+  if (isLoading && !sections) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
     <div
@@ -46,10 +39,9 @@ function SectionsPage() {
         }
       />
       <div style={{ height: "100%" }}>
-        <CustomTable data={tableData} columns={defaultColumns()} />
-        {modalHandler.type === "create" && <SectionModal mainAction={createSectionMutation} />}
-        {modalHandler.type === "edit" && <SectionModal mainAction={updateSectionMutation} />}
-        {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSectionMutation} section={"sections"} />}
+        <CustomTable data={sections} columns={defaultColumns()} />
+        {showModal && <SectionForm defaultValues={defaultValues} />}
+        {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSection} section={"sections"} />}
       </div>
     </div>
   );

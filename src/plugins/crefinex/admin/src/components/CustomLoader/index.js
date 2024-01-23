@@ -1,6 +1,6 @@
 import React from "react";
-import { Flex, Loader } from "@strapi/design-system";
-export default function CustomLoader() {
+import { Flex, Loader as StrapiLoader } from "@strapi/design-system";
+export default function Loader() {
   return (
     <Flex
       style={{
@@ -10,7 +10,7 @@ export default function CustomLoader() {
         transform: "translate(-50%, -50%)",
       }}
     >
-      <Loader>Loading...</Loader>
+      <StrapiLoader>Loading...</StrapiLoader>
     </Flex>
   );
 }

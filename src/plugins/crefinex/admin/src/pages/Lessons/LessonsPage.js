@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // Importing components and icons
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import { CustomAlert, CustomLoader, LessonModal, DeleteDialog } from "../../components";
+import { CustomAlert, Loader, LessonModal, DeleteDialog } from "../../components";
 
 // Importing utility hooks and functions
 import { useModal, usePagination } from "../../utils";
@@ -17,7 +17,7 @@ import {
 import { formatData } from "../../utils/helpers/reduceAttributesFromData";
 import CustomTable from "../../components/table";
 import defaultColumns from "./columns";
-import { useGetLessonsBySection } from "../../utils/hooks/useFetchData";
+import { getLessonsBySection } from "../../utils/data/getData";
 function LessonsPage() {
   const [tableData, setTableData] = useState([]);
 
@@ -25,7 +25,7 @@ function LessonsPage() {
   const { sectionId } = useParams();
   const { modalHandler } = useModal();
   const { currentPage, rowsPerPage } = usePagination();
-  const { data, isLoading, error } = useGetLessonsBySection(sectionId, currentPage, rowsPerPage);
+  const { data, isLoading, error } = getLessonsBySection(sectionId, currentPage, rowsPerPage);
 
   useEffect(() => {
     setTableData(formatData(data?.lessonsBySection?.lessons));
@@ -36,7 +36,7 @@ function LessonsPage() {
 
   const world = lessonsBySection?.section?.world?.data?.attributes?.name;
 
-  if (isLoading) return <CustomLoader />;
+  if (isLoading) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
     <div style={{ width: "83vw", marginBottom: "48px" }}>

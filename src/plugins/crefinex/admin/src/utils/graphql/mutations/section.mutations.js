@@ -7,7 +7,7 @@ import { gql } from "graphql-request";
 // how your backend has set this up.
 // Refer to their docs to get the proper type.
 
-export const createSectionMutation = gql`
+export const createSection = gql`
   mutation ($data: CrefinexSectionInput!) {
     createCrefinexSection(data: $data) {
       data {
@@ -17,7 +17,7 @@ export const createSectionMutation = gql`
   }
 `;
 
-export const updateSectionMutation = gql`
+export const updateSection = gql`
   mutation ($id: ID!, $data: CrefinexSectionInput!) {
     updateCrefinexSection(id: $id, data: $data) {
       data {
@@ -27,7 +27,7 @@ export const updateSectionMutation = gql`
   }
 `;
 
-export const deleteSectionMutation = gql`
+export const deleteSection = gql`
   mutation ($id: ID!) {
     deleteCrefinexSection(id: $id) {
       data {

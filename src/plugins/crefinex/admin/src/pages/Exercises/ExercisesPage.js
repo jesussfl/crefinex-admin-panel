@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 // Importing components and icons
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb } from "@strapi/design-system";
-import { CustomAlert, CustomLoader, ExercisesModal, DeleteDialog } from "../../components";
+import { CustomAlert, Loader, ExercisesModal, DeleteDialog } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
 
 // Importing utility hooks and functions
@@ -42,7 +42,7 @@ function ExercisesPage() {
   useEffect(() => {
     setTableData(formatData(exercisesData?.exercisesByLesson?.exercises));
   }, [exercisesData]);
-  if (isLoading) return <CustomLoader />;
+  if (isLoading) return <Loader />;
 
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
 

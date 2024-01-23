@@ -1,5 +1,7 @@
 import React, { forwardRef, useState } from "react";
-import CustomModal from "../CustomModal";
+// import CustomModal from "../CustomModal";
+import { ModalLayout, ModalHeader, ModalBody, ModalFooter, Typography, Button } from "@strapi/design-system";
+
 import { TextInput, SingleSelect, SingleSelectOption } from "@strapi/design-system";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
@@ -59,7 +61,7 @@ export default function SectionModal({ mainAction }) {
   });
 
   return (
-    <CustomModal handleSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <TextInputControlled
         name="description"
         control={control}
@@ -104,7 +106,7 @@ export default function SectionModal({ mainAction }) {
           minLength: { value: 100, message: "El contenido es muy corto" },
         }}
       />
-    </CustomModal>
+    </form>
   );
 }
 

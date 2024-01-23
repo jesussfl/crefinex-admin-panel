@@ -14,7 +14,7 @@ import EmptyState from "./EmptyState";
 
 import CustomAlert from "./CustomAlert";
 
-import CustomLoader from "./CustomLoader";
+import Loader from "./CustomLoader";
 
 import { DeleteDialog } from "./Dialog/CustomDialogs";
 
@@ -25,7 +25,7 @@ export {
   EmptyState,
   CustomTable,
   CustomAlert,
-  CustomLoader,
+  Loader,
   DeleteDialog,
   SectionModal,
   ExercisesModal,

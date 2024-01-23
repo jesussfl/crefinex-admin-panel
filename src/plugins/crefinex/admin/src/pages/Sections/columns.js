@@ -4,6 +4,7 @@ import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { useModal } from "../../utils";
+import SectionForm from "./components/form";
 const columnHelper = createColumnHelper();
 const defaultColumns = () => {
   const { modalHandler } = useModal();
@@ -56,9 +57,7 @@ const defaultColumns = () => {
             </Link>
             <Box paddingLeft={1}>
               <IconButton
-                onClick={() =>
-                  modalHandler.open("edit", info.row.original.id, { ...info.row.original, world: info.row.original.world.data.id })
-                }
+                onClick={() => modalHandler.open("edit", info.row.original.id, info.row.original)}
                 label="Editar"
                 noBorder
                 icon={<Pencil />}

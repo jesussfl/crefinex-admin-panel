@@ -30,7 +30,14 @@ const config = {
     // 'zh',
   ],
   translations: {
+    en: {
+      "Auth.form.welcome.title": "Welcome to Crefinex",
+      "Auth.form.welcome.subtitle": "Please sign in to continue",
+    },
     es: {
+      "Auth.form.welcome.title": "Bienvenido a Crefinex",
+      "Auth.form.welcome.subtitle": "Por favor, inicie sesión para continuar",
+
       "app.components.LeftMenu.navbrand.title": "Panel de Control",
       "app.components.LeftMenu.navbrand.workplace": "Crefinex",
       "crefinex.plugin.name": "Crefinex",

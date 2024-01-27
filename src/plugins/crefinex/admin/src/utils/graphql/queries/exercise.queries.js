@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 
-export const queryExercisesByLessonId = gql`
+export const queryExercisesByLesson = gql`
   query ($id: ID!, $start: Int, $limit: Int) {
     exercisesByLesson(id: $id, start: $start, limit: $limit) {
       exercises {

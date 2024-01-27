@@ -61,7 +61,7 @@ const defaultColumns = () => {
             </Link>
             <Box paddingLeft={1}>
               <IconButton
-                onClick={() => modalHandler.open("edit", info.row.original.id, { ...info.row.original })}
+                onClick={() => modalHandler.open("edit", info.row.original.id, info.row.original)}
                 label="Editar"
                 noBorder
                 icon={<Pencil />}

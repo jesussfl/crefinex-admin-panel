@@ -1,5 +1,6 @@
 // ./src/admin/webpack.config.js
-"use strict";
+const path = require("path");
+("use strict");
 
 /* eslint-disable no-unused-vars */
 module.exports = (config, webpack) => {

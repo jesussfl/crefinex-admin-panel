@@ -615,7 +615,9 @@ export interface PluginCrefinexLesson extends Schema.CollectionType {
       }> &
       Attribute.DefaultTo<'This is a lesson description'>;
     order: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<1>;
-    type: Attribute.Enumeration<['gift', 'lesson', 'exam']>;
+    type: Attribute.Enumeration<['gift', 'lesson', 'exam']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'lesson'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

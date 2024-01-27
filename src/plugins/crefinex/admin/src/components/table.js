@@ -13,6 +13,7 @@ import {
   Tbody,
   TextInput,
   EmptyStateLayout,
+  Typography,
 } from "@strapi/design-system";
 import { useModal } from "../utils/contexts/ModalContext";
 import { Illo } from "../components/Illo";
@@ -87,11 +88,11 @@ function CustomTable({ data, columns, emptyStateMessage }) {
             {">>"}
           </Button>
         </Flex>
-        <span className="flex items-center gap-1">
-          <div>Página</div>
-          <strong>
+        <span className="flex items-center gap-1 ">
+          <Typography>Página </Typography>
+          <Typography>
             {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-          </strong>
+          </Typography>
         </span>
         <Flex style={{ gap: 4, alignItems: "flex-end", marginTop: "0.8rem" }}>
           <TextInput

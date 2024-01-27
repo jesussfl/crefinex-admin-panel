@@ -28,6 +28,6 @@ export const AlertsProvider = ({ children }) => {
   );
 };
 
-export const useAlerts = () => {
+export const useAlert = () => {
   return useContext(AlertsContext);
 };

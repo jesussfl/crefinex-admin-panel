@@ -2,6 +2,10 @@
   "compilerOptions": {
     "jsx": "react",
 
-    "checkJs": false
+    "checkJs": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@crefinex/*": ["./src/plugins/crefinex/*"]
+    }
   }
 }

@@ -12,50 +12,54 @@ import {
   Typography,
   Button,
 } from "@strapi/design-system";
-import Wysiwyg from "../../../../components/Wysiwyg/Wysiwyg";
 
 // Hooks and utilities
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useModal } from "../../../../utils";
-import { queryWorlds } from "../../../../utils/graphql/queries/world.queries";
 import { query } from "../../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../../utils/constants/queryKeys.constants";
-import { createSection, updateSection } from "../../../../utils/graphql/mutations/section.mutations";
+import { createLesson, updateLesson } from "../../../../utils/graphql/mutations/lesson.mutations";
+import { useAlert } from "../../../../utils/contexts/AlertContext";
 
+// Constants
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
-const MAX_WYSIWYG_LENGTH = 1000;
 const MIN_DESCRIPTION_LENGTH = 10;
 
-export default function SectionForm({ defaultValues }) {
-  const isEditEnabled = !!defaultValues;
-  const queryClient = useQueryClient();
+export default function ExerciseForm({ defaultValues, sectionId }) {
+  const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
+  console.log("isEditEnabled", isEditEnabled);
+  const { showAlert } = useAlert();
   const { modalHandler } = useModal();
+
+  const queryClient = useQueryClient();
   const { control, handleSubmit } = useForm({ defaultValues });
-  const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
-  const { mutate } = useMutation((data) => query(isEditEnabled ? updateSection : createSection, { ...data }));
+  const { mutate } = useMutation((data) => query(isEditEnabled ? updateLesson : createLesson, { ...data }));
+
   const onSubmit = (values) => {
-    console.log(values);
     const data = {
       description: values.description,
       order: parseFloat(values.order),
-      world: values.world,
-      content: values.content,
-      contentTitle: values.contentTitle,
+      section: sectionId,
+      type: values.type,
       publishedAt: new Date(),
     };
     if (isEditEnabled) {
-      console.log("Editando sección");
+      console.log("Editando leccion");
       mutate(
         { id: defaultValues.id, data },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries(QUERY_KEYS.sections);
+            console.log("Lección editada");
+            showAlert("success", "Lección editada");
+            queryClient.invalidateQueries(QUERY_KEYS.lessons);
             modalHandler.close();
           },
           onError: (error) => {
             console.log(error);
+            showAlert("error", "Ha ocurrido un error");
+            modalHandler.close();
           },
         }
       );
@@ -63,17 +67,20 @@ export default function SectionForm({ defaultValues }) {
       return;
     }
 
-    console.log("Creando entrada");
+    console.log("Creando lección");
     mutate(
       { data },
       {
         onSuccess: () => {
-          console.log("Entrada creada");
-          queryClient.invalidateQueries(QUERY_KEYS.sections);
+          console.log("Lección creada");
+          showAlert("success", "Lección creada");
+          queryClient.invalidateQueries(QUERY_KEYS.lessons);
           modalHandler.close();
         },
         onError: (error) => {
           console.log(error);
+          showAlert("error", "Ha ocurrido un error");
+          modalHandler.close();
         },
       }
     );
@@ -87,6 +94,25 @@ export default function SectionForm({ defaultValues }) {
       </ModalHeader>
 
       <ModalBody style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Controller
+          name={"type"}
+          control={control}
+          rules={{ required: "Este campo es requerido" }}
+          render={({ field: { onChange, onBlur, value }, fieldState }) => (
+            <SingleSelect
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value || ""}
+              placeholder="Selecciona el tipo"
+              label="Tipo de lección"
+              error={fieldState.error?.message}
+            >
+              <SingleSelectOption value="gift">Regalo</SingleSelectOption>
+              <SingleSelectOption value="lesson">Lección</SingleSelectOption>
+              <SingleSelectOption value="exam">Examen</SingleSelectOption>
+            </SingleSelect>
+          )}
+        />
         <Controller
           name={"description"}
           control={control}
@@ -112,26 +138,7 @@ export default function SectionForm({ defaultValues }) {
             />
           )}
         />
-        <Controller
-          name={"world"}
-          control={control}
-          rules={{ required: "Este campo es requerido" }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <SingleSelect
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value || ""}
-              placeholder="Selecciona el mundo de la sección"
-              label="Mundo"
-              error={fieldState.error?.message}
-            >
-              {!isLoading &&
-                worlds.crefinexWorlds.data.map((world) => (
-                  <SingleSelectOption key={world.id} value={world.id}>{`${world.id} - ${world.attributes.name}`}</SingleSelectOption>
-                ))}
-            </SingleSelect>
-          )}
-        />
+
         <Controller
           name={"order"}
           control={control}
@@ -155,41 +162,6 @@ export default function SectionForm({ defaultValues }) {
             </SingleSelect>
           )}
         />
-        <Controller
-          name={"contentTitle"}
-          control={control}
-          rules={{
-            required: "Este campo es requerido",
-          }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <TextInput
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value || ""}
-              label={"Título del contenido"}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
-          name={"content"}
-          control={control}
-          rules={{
-            required: "Este campo es obligatorio",
-            maxLength: { value: MAX_WYSIWYG_LENGTH, message: `Máximo ${MAX_WYSIWYG_LENGTH} caracteres` },
-            minLength: { value: 100, message: "El contenido es muy corto" },
-          }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <Wysiwyg
-              name={"content"}
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-              displayName={"Contenido de la sección"}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
       </ModalBody>
 
       <ModalFooter
@@ -198,7 +170,7 @@ export default function SectionForm({ defaultValues }) {
             Cancelar
           </Button>
         }
-        endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar sección"}</Button>}
+        endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar Lección"}</Button>}
       />
     </ModalLayout>
   );

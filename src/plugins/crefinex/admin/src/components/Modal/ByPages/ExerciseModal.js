@@ -9,7 +9,7 @@ import WordMemoryExercise from "../Exercises/WordMemoryExercise";
 import TheoryExercise from "../Exercises/TheoryExercise";
 import { useModal } from "../../../utils";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
-import { useAlerts } from "../../../utils/contexts/AlertsContext";
+import { useAlert } from "../../../utils/contexts/AlertContext";
 import { query } from "../../../utils/graphql/client/GraphQLCLient";
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_EXERCISE_ORDER = 100;
@@ -18,7 +18,7 @@ export default function ExercisesModal({ lessonId, mainAction }) {
   const { defaultValues, modalHandler } = useModal();
   const queryClient = useQueryClient();
   const { control, handleSubmit, watch } = useForm({ defaultValues });
-  const { showAlert } = useAlerts();
+  const { showAlert } = useAlert();
   const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
     onSuccess: () => {
       queryClient.invalidateQueries(QUERY_KEYS.exercises);

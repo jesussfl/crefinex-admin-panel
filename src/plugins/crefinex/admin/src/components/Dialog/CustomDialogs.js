@@ -8,7 +8,7 @@ import { useCustomMutation } from "../../utils/hooks/useCustomMutation";
 import { query } from "../../utils/graphql/client/GraphQLCLient";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAlerts } from "../../utils/contexts/AlertsContext";
+import { useAlert } from "../../utils/contexts/AlertContext";
 // Confirmation dialog component
 export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }) {
   return (
@@ -47,7 +47,7 @@ export function ConfirmationDialog({ setShowDialog, setShowModal, handleSubmit }
 // Delete dialog component
 export function DeleteDialog({ mainAction, section }) {
   const queryClient = useQueryClient();
-  const { showAlert } = useAlerts();
+  const { showAlert } = useAlert();
   const { modalHandler } = useModal();
   const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {
     onSuccess: () => {

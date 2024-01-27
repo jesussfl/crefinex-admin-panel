@@ -4,7 +4,7 @@ import { AnErrorOccurred } from "@strapi/helper-plugin";
 import { LessonsPage, ExercisesPage, SectionsPage } from "../../pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "../../utils/contexts/ModalContext";
-import { AlertsProvider } from "../../utils/contexts/AlertsContext";
+import { AlertsProvider } from "../../utils/contexts/AlertContext";
 import { ROUTES, APP_ROUTES } from "../../utils/constants/routes.constants";
 // Create a client
 const queryClient = new QueryClient();

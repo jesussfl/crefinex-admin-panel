@@ -11,7 +11,7 @@ import { queryWorlds } from "../../../utils/graphql/queries/world.queries";
 import { query } from "../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../utils/constants/queryKeys.constants";
 import Wysiwyg from "../../Wysiwyg/Wysiwyg";
-import { useAlerts } from "../../../utils/contexts/AlertsContext";
+import { useAlert } from "../../../utils/contexts/AlertContext";
 
 const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
@@ -20,7 +20,7 @@ export default function SectionModal({ mainAction }) {
   const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
   const { defaultValues, modalHandler } = useModal();
   const { control, handleSubmit } = useForm({ defaultValues });
-  const { showAlert } = useAlerts();
+  const { showAlert } = useAlert();
   const queryClient = useQueryClient();
   console.log(queryClient.getQueryState());
   const mutation = useMutation(async (data) => await query(mainAction, { ...data }), {

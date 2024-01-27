@@ -47,7 +47,9 @@
         "gift",
         "lesson",
         "exam"
-      ]
+      ],
+      "default": "lesson",
+      "required": true
     }
   }
 }

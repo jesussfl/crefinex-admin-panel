@@ -4,7 +4,7 @@ import React from "react";
 import { BaseHeaderLayout, Box, Button, ContentLayout, Layout } from "@strapi/design-system";
 import { CustomAlert, Loader, DeleteDialog } from "../../components";
 import { Plus } from "@strapi/icons";
-import CustomTable from "../../components/table";
+import StrapiTable from "../../components/Table";
 import SectionForm from "./components/form";
 
 // Utility hooks and functions
@@ -35,7 +35,7 @@ function SectionsPage() {
           }
         />
         <ContentLayout>
-          <CustomTable data={sections} columns={defaultColumns()} />
+          <StrapiTable data={sections} columns={defaultColumns()} />
           {showModal && <SectionForm defaultValues={defaultValues} />}
           {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSection} section={"sections"} />}
         </ContentLayout>

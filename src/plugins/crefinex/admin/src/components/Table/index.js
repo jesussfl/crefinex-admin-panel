@@ -5,7 +5,7 @@ import {
   Flex,
   SingleSelect,
   SingleSelectOption,
-  Table,
+  Table as StrapiTable,
   Thead,
   Tr,
   Th,
@@ -15,11 +15,11 @@ import {
   EmptyStateLayout,
   Typography,
 } from "@strapi/design-system";
-import { useModal } from "../utils/contexts/ModalContext";
-import { Illo } from "../components/Illo";
+import { useModal } from "../../utils/contexts/ModalContext";
+import { Illo } from "../Illo";
 import { Plus } from "@strapi/icons";
 
-function CustomTable({ data, columns, emptyStateMessage }) {
+function Table({ data, columns, emptyStateMessage }) {
   const { modalHandler } = useModal();
 
   //memoized columns
@@ -49,7 +49,7 @@ function CustomTable({ data, columns, emptyStateMessage }) {
   }
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-      <Table>
+      <StrapiTable>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
@@ -68,7 +68,7 @@ function CustomTable({ data, columns, emptyStateMessage }) {
             </Tr>
           ))}
         </Tbody>
-      </Table>
+      </StrapiTable>
       <Flex justifyContent="space-between" alignItems="flex-end">
         <Flex style={{ gap: 4 }}>
           <Button className="border rounded p-1" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
@@ -124,4 +124,4 @@ function CustomTable({ data, columns, emptyStateMessage }) {
   );
 }
 
-export default CustomTable;
+export default Table;

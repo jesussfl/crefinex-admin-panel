@@ -4,7 +4,7 @@ import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
 import { useModal } from "../../utils";
-import SectionForm from "./components/form";
+
 const columnHelper = createColumnHelper();
 const defaultColumns = () => {
   const { modalHandler } = useModal();

@@ -4,7 +4,7 @@ import React from "react";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb, Box, Layout } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
 import { CustomAlert, Loader } from "../../components";
-import CustomTable from "../../components/table";
+import StrapiTable from "../../components/Table";
 import LessonForm from "./components/form";
 
 // Utility hooks and functions
@@ -48,7 +48,7 @@ function LessonsPage() {
           as="h2"
         />
         <ContentLayout>
-          <CustomTable data={lessons} columns={defaultColumns()} />
+          <StrapiTable data={lessons} columns={defaultColumns()} />
           {showModal && <LessonForm sectionId={sectionId} defaultValues={defaultValues} />}
         </ContentLayout>
       </Layout>

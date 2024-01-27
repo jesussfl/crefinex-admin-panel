@@ -5,7 +5,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb, Box, Layout } from "@strapi/design-system";
 import { CustomAlert, Loader } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import CustomTable from "../../components/table";
+import StrapiTable from "../../components/Table";
 
 // Utility hooks and functions
 import { useModal } from "../../utils/contexts/ModalContext";
@@ -50,7 +50,7 @@ function ExercisesPage() {
         />
 
         <ContentLayout>
-          <CustomTable data={exercises} columns={defaultColumns()} />
+          <StrapiTable data={exercises} columns={defaultColumns()} />
         </ContentLayout>
       </Layout>
     </Box>

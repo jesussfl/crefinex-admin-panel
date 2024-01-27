@@ -4,11 +4,11 @@
  *
  */
 
-import React from 'react';
-import { Puzzle } from '@strapi/icons';
+import React from "react";
+import { ChartBubble } from "@strapi/icons";
 
 function PluginIcon() {
-  return <Puzzle />;
+  return <ChartBubble />;
 }
 
 export default PluginIcon;

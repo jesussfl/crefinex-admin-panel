@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 
-export const createExerciseMutation = gql`
+export const createExercise = gql`
   mutation ($data: CrefinexExerciseInput!) {
     createCrefinexExercise(data: $data) {
       data {
@@ -10,7 +10,7 @@ export const createExerciseMutation = gql`
   }
 `;
 
-export const updateExerciseMutation = gql`
+export const updateExercise = gql`
   mutation ($id: ID!, $data: CrefinexExerciseInput!) {
     updateExercise(id: $id, data: $data) {
       id
@@ -18,7 +18,7 @@ export const updateExerciseMutation = gql`
   }
 `;
 
-export const deleteExerciseMutation = gql`
+export const deleteExercise = gql`
   mutation ($id: ID!) {
     deleteCrefinexExercise(id: $id) {
       data {

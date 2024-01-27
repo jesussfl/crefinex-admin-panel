@@ -5,7 +5,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb, Box, Layout } from "@strapi/design-system";
 import { CustomAlert, Loader } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
-import StrapiTable from "../../components/Table";
+import Table from "../../components/Table";
 
 // Utility hooks and functions
 import { useModal } from "../../utils/contexts/ModalContext";
@@ -13,6 +13,7 @@ import { getExercisesByLesson } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
+import ExerciseForm from "./components/form/mainForm";
 
 function ExercisesPage() {
   const history = useHistory();
@@ -50,7 +51,8 @@ function ExercisesPage() {
         />
 
         <ContentLayout>
-          <StrapiTable data={exercises} columns={defaultColumns()} />
+          <Table data={exercises} columns={defaultColumns()} />
+          {showModal && <ExerciseForm defaultValues={defaultValues} lessonId={lessonId} />}
         </ContentLayout>
       </Layout>
     </Box>

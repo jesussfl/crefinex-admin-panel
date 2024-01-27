@@ -52,6 +52,14 @@ const defaultColumns = () => {
         <>
           <Flex style={{ justifyContent: "end" }}>
             <Box paddingLeft={1}>
+              <IconButton
+                onClick={() => modalHandler.open("edit", info.row.original.id, info.row.original)}
+                label="Editar"
+                noBorder
+                icon={<Pencil />}
+              />
+            </Box>
+            <Box paddingLeft={1}>
               <IconButton onClick={() => modalHandler.open("delete", info.row.original.id)} label="Eliminar" noBorder icon={<Trash />} />
             </Box>
           </Flex>

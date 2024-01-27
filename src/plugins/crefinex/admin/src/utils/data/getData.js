@@ -68,7 +68,7 @@ export const getExercisesByLesson = (lessonId) => {
 
   useEffect(() => {
     setExercises(formatData(data?.exercisesByLesson?.exercises));
-  });
+  }, [data]);
 
   return {
     exercises,

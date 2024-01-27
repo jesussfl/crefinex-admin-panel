@@ -23,6 +23,8 @@ import { createExercise, updateExercise } from "../../../../utils/graphql/mutati
 import { useAlert } from "../../../../utils/contexts/AlertContext";
 import SimpleSelectionForm from "./simpleSelectionForm";
 import CompletionExerciseForm from "./completionExerciseForm";
+import WordMemoryForm from "./wordMemoryForm";
+import TheoryExerciseForm from "./theoryExerciseForm";
 
 // Constants
 const ORDER_INPUTS_TO_SHOW = 20;
@@ -99,14 +101,19 @@ export default function ExerciseForm({ defaultValues, lessonId }) {
       return <CompletionExerciseForm />;
     } else if (form.watch("type") === "simpleSelection") {
       return <SimpleSelectionForm />;
+    } else if (form.watch("type") === "wordsMemory") {
+      return <WordMemoryForm />;
+    } else if (form.watch("type") === "theory") {
+      return <TheoryExerciseForm />;
     }
+    return null;
   };
   return (
     <FormProvider {...form}>
       <ModalLayout labelledBy="title" as="form" onSubmit={form.handleSubmit(onSubmit)} onClose={modalHandler.close}>
         <ModalHeader>
           <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-            {isEditEnabled ? "Editar sección" : "Crear sección"}
+            {isEditEnabled ? "Editar ejercicio" : "Crear ejercicio"}
           </Typography>
         </ModalHeader>
 
@@ -169,7 +176,7 @@ export default function ExerciseForm({ defaultValues, lessonId }) {
               Cancelar
             </Button>
           }
-          endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar Lección"}</Button>}
+          endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar Ejercicio"}</Button>}
         />
       </ModalLayout>
     </FormProvider>

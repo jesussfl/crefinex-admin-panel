@@ -16,70 +16,85 @@ import Wysiwyg from "../../../../components/Wysiwyg/Wysiwyg";
 
 // Hooks and utilities
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFormState } from "react-hook-form";
 import { useModal } from "../../../../utils";
 import { queryWorlds } from "../../../../utils/graphql/queries/world.queries";
 import { query } from "../../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../../utils/constants/queryKeys.constants";
 import { createSection, updateSection } from "../../../../utils/graphql/mutations/section.mutations";
+import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
+import { useAlert } from "../../../../utils/contexts/AlertContext";
+import { getSections } from "../../../../utils/data/getData";
 
-const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_WYSIWYG_LENGTH = 1000;
 const MIN_DESCRIPTION_LENGTH = 10;
 
 export default function SectionForm({ defaultValues }) {
+  // This is used to know if the form is in edit mode
   const isEditEnabled = !!defaultValues;
-  const queryClient = useQueryClient();
+
+  // Utilities
   const { modalHandler } = useModal();
-  const { control, handleSubmit } = useForm({ defaultValues });
+  const { showAlert } = useAlert();
+
+  // Form management
+  const form = useForm({ defaultValues });
+  const { isDirty, dirtyFields } = useFormState({ control: form.control });
+
+  // Data management
+  const queryClient = useQueryClient();
   const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
-  const { mutate } = useMutation((data) => query(isEditEnabled ? updateSection : createSection, { ...data }));
+  const { pagination } = getSections();
+  const { mutate: create } = useMutation((data) => query(createSection, { ...data }));
+  const { mutate: update } = useMutation((data) => query(updateSection, { ...data }));
+
   const onSubmit = (values) => {
-    console.log(values);
-    const data = {
-      description: values.description,
-      order: parseFloat(values.order),
-      world: values.world,
-      content: values.content,
-      contentTitle: values.contentTitle,
-      publishedAt: new Date(),
-    };
-    if (isEditEnabled) {
-      console.log("Editando sección");
-      mutate(
-        { id: defaultValues.id, data },
+    if (!isEditEnabled) {
+      const data = {
+        ...values,
+        order: parseFloat(pagination?.total + 1),
+        publishedAt: new Date(),
+      };
+
+      create(
+        { data },
         {
           onSuccess: () => {
+            console.log("Entrada creada");
+            showAlert("success", `Sección creada`);
             queryClient.invalidateQueries(QUERY_KEYS.sections);
             modalHandler.close();
           },
           onError: (error) => {
+            showAlert("error", `Ha ocurrido un error`);
             console.log(error);
           },
         }
       );
-
+    }
+    if (isEditEnabled && isDirty) {
+      const data = getDirtyValues(dirtyFields, values); // Get only the fields that have been changed
+      update(
+        { id: defaultValues.id, data },
+        {
+          onSuccess: () => {
+            console.log("Sección editada");
+            showAlert("success", `Sección editada`);
+            queryClient.invalidateQueries(QUERY_KEYS.sections);
+            modalHandler.close();
+          },
+          onError: (error) => {
+            showAlert("error", `Ha ocurrido un error`);
+            console.log(error);
+          },
+        }
+      );
       return;
     }
-
-    console.log("Creando entrada");
-    mutate(
-      { data },
-      {
-        onSuccess: () => {
-          console.log("Entrada creada");
-          queryClient.invalidateQueries(QUERY_KEYS.sections);
-          modalHandler.close();
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      }
-    );
   };
   return (
-    <ModalLayout labelledBy="title" as="form" onSubmit={handleSubmit(onSubmit)} onClose={modalHandler.close}>
+    <ModalLayout labelledBy="title" as="form" onSubmit={form.handleSubmit(onSubmit)} onClose={modalHandler.close}>
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
           {isEditEnabled ? "Editar sección" : "Crear sección"}
@@ -89,7 +104,7 @@ export default function SectionForm({ defaultValues }) {
       <ModalBody style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <Controller
           name={"description"}
-          control={control}
+          control={form.control}
           rules={{
             required: "Este campo es requerido",
             maxLength: {
@@ -114,7 +129,7 @@ export default function SectionForm({ defaultValues }) {
         />
         <Controller
           name={"world"}
-          control={control}
+          control={form.control}
           rules={{ required: "Este campo es requerido" }}
           render={({ field: { onChange, onBlur, value }, fieldState }) => (
             <SingleSelect
@@ -132,32 +147,28 @@ export default function SectionForm({ defaultValues }) {
             </SingleSelect>
           )}
         />
-        <Controller
-          name={"order"}
-          control={control}
-          rules={{ required: "Este campo es requerido" }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <SingleSelect
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value || ""}
-              placeholder="Selecciona el orden"
-              label="Orden"
-              error={fieldState.error?.message}
-            >
-              {Array(ORDER_INPUTS_TO_SHOW)
-                .fill(0)
-                .map((_, index) => (
-                  <SingleSelectOption key={index} value={index + 1}>
-                    {index + 1}
-                  </SingleSelectOption>
-                ))}
-            </SingleSelect>
-          )}
-        />
+        {isEditEnabled && (
+          <Controller
+            name={"order"}
+            control={form.control}
+            rules={{ required: "Este campo es requerido" }}
+            render={({ field, fieldState }) => (
+              <SingleSelect {...field} placeholder="Selecciona el orden" label="Orden" error={fieldState.error?.message}>
+                {Array(pagination?.total || 0)
+                  .fill(0)
+                  .map((_, index) => (
+                    <SingleSelectOption key={index} value={index + 1}>
+                      {index + 1}
+                    </SingleSelectOption>
+                  ))}
+              </SingleSelect>
+            )}
+          />
+        )}
+
         <Controller
           name={"contentTitle"}
-          control={control}
+          control={form.control}
           rules={{
             required: "Este campo es requerido",
           }}
@@ -173,7 +184,7 @@ export default function SectionForm({ defaultValues }) {
         />
         <Controller
           name={"content"}
-          control={control}
+          control={form.control}
           rules={{
             required: "Este campo es obligatorio",
             maxLength: { value: MAX_WYSIWYG_LENGTH, message: `Máximo ${MAX_WYSIWYG_LENGTH} caracteres` },

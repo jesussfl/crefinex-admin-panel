@@ -89,7 +89,7 @@ export default function LessonForm({ defaultValues, sectionId }) {
     <ModalLayout labelledBy="title" as="form" onSubmit={handleSubmit(onSubmit)} onClose={modalHandler.close}>
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          {isEditEnabled ? "Editar sección" : "Crear sección"}
+          {isEditEnabled ? "Editar lección" : "Crear lección"}
         </Typography>
       </ModalHeader>
 

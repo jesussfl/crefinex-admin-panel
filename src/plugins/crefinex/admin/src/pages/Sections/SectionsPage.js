@@ -2,21 +2,21 @@ import React from "react";
 
 // Components and icons
 import { BaseHeaderLayout, Box, Button, ContentLayout, Layout } from "@strapi/design-system";
-import { CustomAlert, Loader, DeleteDialog } from "../../components";
+import { CustomAlert, Loader } from "../../components";
 import { Plus } from "@strapi/icons";
-import StrapiTable from "../../components/Table";
+import Table from "../../components/Table";
 import SectionForm from "./components/form";
 
 // Utility hooks and functions
 import { useModal } from "../../utils";
-import { deleteSection } from "../../utils/graphql/mutations/section.mutations";
 import { getSections } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
+import { DeleteDialog } from "./components/dialog";
 
 function SectionsPage() {
-  const { modalHandler, showModal, defaultValues } = useModal();
+  const { modalHandler, defaultValues } = useModal();
   const { sections, isLoading, error } = getSections();
 
   if (isLoading && !sections) return <Loader />;
@@ -35,9 +35,9 @@ function SectionsPage() {
           }
         />
         <ContentLayout>
-          <StrapiTable data={sections} columns={defaultColumns()} />
-          {showModal && <SectionForm defaultValues={defaultValues} />}
-          {modalHandler.type === "delete" && <DeleteDialog mainAction={deleteSection} section={"sections"} />}
+          <Table data={sections} columns={defaultColumns(modalHandler)} />
+          {(modalHandler.type === "create" || modalHandler.type === "edit") && <SectionForm defaultValues={defaultValues} />}
+          {modalHandler.type === "delete" && <DeleteDialog />}
         </ContentLayout>
       </Layout>
     </Box>

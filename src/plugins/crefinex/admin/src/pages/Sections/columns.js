@@ -3,12 +3,9 @@ import { Flex, Link, IconButton, Box } from "@strapi/design-system";
 import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
-import { useModal } from "../../utils";
 
 const columnHelper = createColumnHelper();
-const defaultColumns = () => {
-  const { modalHandler } = useModal();
-
+const defaultColumns = (modalHandler) => {
   return [
     columnHelper.accessor("id", {
       header: "ID",
@@ -57,7 +54,9 @@ const defaultColumns = () => {
             </Link>
             <Box paddingLeft={1}>
               <IconButton
-                onClick={() => modalHandler.open("edit", info.row.original.id, info.row.original)}
+                onClick={() =>
+                  modalHandler.open("edit", info.row.original.id, { ...info.row.original, world: info.row.original.world.data.id })
+                }
                 label="Editar"
                 noBorder
                 icon={<Pencil />}

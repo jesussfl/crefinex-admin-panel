@@ -4,7 +4,7 @@ import React from "react";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb, Box, Layout } from "@strapi/design-system";
 import { Plus, ArrowLeft } from "@strapi/icons";
 import { CustomAlert, Loader } from "../../components";
-import StrapiTable from "../../components/Table";
+import Table from "../../components/Table";
 import LessonForm from "./components/form";
 
 // Utility hooks and functions
@@ -14,11 +14,12 @@ import { getLessonsBySection } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
+import { DeleteDialog } from "./components/dialog";
 
 function LessonsPage() {
   const history = useHistory();
   const { sectionId } = useParams();
-  const { modalHandler, defaultValues, showModal } = useModal();
+  const { modalHandler, defaultValues } = useModal();
   const { lessons, isLoading, error } = getLessonsBySection(sectionId);
 
   if (isLoading) return <Loader />;
@@ -48,8 +49,11 @@ function LessonsPage() {
           as="h2"
         />
         <ContentLayout>
-          <StrapiTable data={lessons} columns={defaultColumns()} />
-          {showModal && <LessonForm sectionId={sectionId} defaultValues={defaultValues} />}
+          <Table data={lessons} columns={defaultColumns(modalHandler)} />
+          {(modalHandler.type === "create" || modalHandler.type === "edit") && (
+            <LessonForm sectionId={sectionId} defaultValues={defaultValues} />
+          )}
+          {modalHandler.type === "delete" && <DeleteDialog />}
         </ContentLayout>
       </Layout>
     </Box>

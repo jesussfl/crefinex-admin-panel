@@ -5,20 +5,21 @@ import { useParams, useHistory } from "react-router-dom";
 import { BaseHeaderLayout, ContentLayout, Button, Link, Breadcrumbs, Crumb, Box, Layout } from "@strapi/design-system";
 import { CustomAlert, Loader } from "../../components";
 import { Plus, ArrowLeft } from "@strapi/icons";
+import { DeleteDialog } from "./components/dialog";
 import Table from "../../components/Table";
+import ExerciseForm from "./components/form/mainForm";
 
 // Utility hooks and functions
-import { useModal } from "../../utils/contexts/ModalContext";
+import { useModal } from "../../utils/";
 import { getExercisesByLesson } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
-import ExerciseForm from "./components/form/mainForm";
 
 function ExercisesPage() {
+  const { modalHandler, defaultValues } = useModal();
   const history = useHistory();
   const { lessonId } = useParams();
-  const { modalHandler, showModal, defaultValues } = useModal();
   const { exercises, isLoading, error } = getExercisesByLesson(lessonId);
 
   if (isLoading) return <Loader />;
@@ -51,8 +52,11 @@ function ExercisesPage() {
         />
 
         <ContentLayout>
-          <Table data={exercises} columns={defaultColumns()} />
-          {showModal && <ExerciseForm defaultValues={defaultValues} lessonId={lessonId} />}
+          <Table data={exercises} columns={defaultColumns(modalHandler)} />
+          {(modalHandler.type === "create" || modalHandler.type === "edit") && (
+            <ExerciseForm defaultValues={defaultValues} lessonId={lessonId} />
+          )}
+          {modalHandler.type === "delete" && <DeleteDialog />}
         </ContentLayout>
       </Layout>
     </Box>

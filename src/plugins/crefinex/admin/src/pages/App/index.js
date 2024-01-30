@@ -4,7 +4,7 @@ import { AnErrorOccurred } from "@strapi/helper-plugin";
 import { LessonsPage, ExercisesPage, SectionsPage } from "../../pages";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "../../utils/contexts/ModalContext";
-import { AlertsProvider } from "../../utils/contexts/AlertContext";
+import { AlertProvider } from "../../utils/contexts/AlertContext";
 import { ROUTES, APP_ROUTES } from "../../utils/constants/routes.constants";
 // Create a client
 const queryClient = new QueryClient();
@@ -12,7 +12,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <AlertsProvider>
+        <AlertProvider>
           <Switch>
             <Route path={APP_ROUTES.HOME} exact>
               <Redirect to={ROUTES.SECTIONS} />
@@ -23,7 +23,7 @@ function App() {
 
             <Route component={AnErrorOccurred} />
           </Switch>
-        </AlertsProvider>
+        </AlertProvider>
       </ModalProvider>
     </QueryClientProvider>
   );

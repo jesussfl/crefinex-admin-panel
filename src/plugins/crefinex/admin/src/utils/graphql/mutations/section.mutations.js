@@ -19,10 +19,8 @@ export const createSection = gql`
 
 export const updateSection = gql`
   mutation ($id: ID!, $data: CrefinexSectionInput!) {
-    updateCrefinexSection(id: $id, data: $data) {
-      data {
-        id
-      }
+    updateSection(id: $id, data: $data) {
+      id
     }
   }
 `;

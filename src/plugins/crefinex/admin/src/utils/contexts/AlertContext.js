@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CustomAlert } from "../../components";
-const AlertsContext = createContext();
+const AlertContext = createContext();
 
-export const AlertsProvider = ({ children }) => {
+export const AlertProvider = ({ children }) => {
   const [data, setData] = useState({});
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
@@ -21,13 +21,13 @@ export const AlertsProvider = ({ children }) => {
   };
 
   return (
-    <AlertsContext.Provider value={{ showAlert, data, isAlertVisible }}>
+    <AlertContext.Provider value={{ showAlert, data, isAlertVisible }}>
       {isAlertVisible && <CustomAlert data={data} />}
       {children}
-    </AlertsContext.Provider>
+    </AlertContext.Provider>
   );
 };
 
 export const useAlert = () => {
-  return useContext(AlertsContext);
+  return useContext(AlertContext);
 };

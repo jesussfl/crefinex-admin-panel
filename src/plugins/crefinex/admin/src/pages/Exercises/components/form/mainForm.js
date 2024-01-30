@@ -30,6 +30,8 @@ import TheoryExerciseForm from "./theoryExerciseForm";
 const ORDER_INPUTS_TO_SHOW = 20;
 
 export default function ExerciseForm({ defaultValues, lessonId }) {
+  const { modalHandler } = useModal();
+  const { showAlert } = useAlert();
   const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
 
   // Default values have to be parsed in case the form is in edit mode. This is because content is a JSON string
@@ -40,12 +42,8 @@ export default function ExerciseForm({ defaultValues, lessonId }) {
       }
     : {};
 
-  const { showAlert } = useAlert();
-  const { modalHandler } = useModal();
-
   const queryClient = useQueryClient();
   const form = useForm({ defaultValues: parsedDefaultValues });
-
   const { mutate } = useMutation((data) => query(isEditEnabled ? updateExercise : createExercise, { ...data }));
 
   const onSubmit = (values) => {
@@ -127,7 +125,7 @@ export default function ExerciseForm({ defaultValues, lessonId }) {
                 onChange={(event) => {
                   field.onChange(event);
 
-                  // TODO: Add a warning message if the user tries to change the type
+                  // TODO Add a warning message if the user tries to change the type
                   form.resetField("content");
                 }}
                 onBlur={(e) => field.onBlur(e.target.value)}

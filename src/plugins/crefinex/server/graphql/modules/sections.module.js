@@ -28,6 +28,7 @@ const resolvers = {
       // const { toEntityResponseCollection, toEntityResponse } = strapi.service("plugin::graphql.format").returnTypes;
 
       let { results: sectionsData, pagination } = await strapi.services[UID].find({
+        sort: { order: "asc" },
         filters: {
           world: args.id,
         },
@@ -47,7 +48,6 @@ const resolvers = {
         world: worldData[0],
         pagination,
       };
-
       // const response = toEntityResponseCollection(data, {
       //   args: { start: args.start, limit: args.limit },
       //   resourceUID: UID,

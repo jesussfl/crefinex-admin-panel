@@ -1,5 +1,12 @@
 import React from "react";
-import { useReactTable, getCoreRowModel, flexRender, getFilteredRowModel, getPaginationRowModel } from "@tanstack/react-table";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+} from "@tanstack/react-table";
 import {
   Button,
   Flex,
@@ -21,7 +28,7 @@ import { Plus } from "@strapi/icons";
 
 function Table({ data, columns, emptyStateMessage }) {
   const { modalHandler } = useModal();
-
+  const [sorting, setSorting] = React.useState([]);
   //memoized columns
 
   const tableColumns = React.useMemo(() => columns, [columns]);
@@ -32,6 +39,12 @@ function Table({ data, columns, emptyStateMessage }) {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+
+    state: {
+      sorting,
+    },
   });
 
   if (!data || data.length === 0) {

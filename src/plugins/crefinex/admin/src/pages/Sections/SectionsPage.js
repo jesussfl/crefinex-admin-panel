@@ -13,12 +13,12 @@ import { getSections } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
-import { DeleteDialog } from "./components/dialog";
+import { DeleteDialog, StatusDialog } from "./components/dialog";
 
 function SectionsPage() {
   const { modalHandler, defaultValues } = useModal();
   const { sections, isLoading, error } = getSections();
-
+  console.log(modalHandler.type);
   if (isLoading && !sections) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
   return (
@@ -38,6 +38,7 @@ function SectionsPage() {
           <Table data={sections} columns={defaultColumns(modalHandler)} />
           {(modalHandler.type === "create" || modalHandler.type === "edit") && <SectionForm defaultValues={defaultValues} />}
           {modalHandler.type === "delete" && <DeleteDialog />}
+          {modalHandler.type === "status" && <StatusDialog status={defaultValues} />}
         </ContentLayout>
       </Layout>
     </Box>

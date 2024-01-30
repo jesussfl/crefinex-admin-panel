@@ -14,40 +14,61 @@ import {
 } from "@strapi/design-system";
 
 // Hooks and utilities
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFormState } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useModal } from "../../../../utils";
 import { query } from "../../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../../utils/constants/queryKeys.constants";
 import { createLesson, updateLesson } from "../../../../utils/graphql/mutations/lesson.mutations";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
+import { getLessonsBySection } from "../../../../utils/data/getData";
+import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 
 // Constants
-const ORDER_INPUTS_TO_SHOW = 20;
 const MAX_DESCRIPTION_LENGTH = 100;
 const MIN_DESCRIPTION_LENGTH = 10;
 
 export default function LessonForm({ defaultValues, sectionId }) {
   const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
-  console.log("isEditEnabled", isEditEnabled);
   const { showAlert } = useAlert();
   const { modalHandler } = useModal();
 
   const queryClient = useQueryClient();
+  const { pagination } = getLessonsBySection(sectionId);
   const { control, handleSubmit } = useForm({ defaultValues });
-  const { mutate } = useMutation((data) => query(isEditEnabled ? updateLesson : createLesson, { ...data }));
+  const { isDirty, dirtyFields } = useFormState({ control });
+  const { mutate: create } = useMutation((data) => query(createLesson, { ...data }));
+  const { mutate: update } = useMutation((data) => query(updateLesson, { ...data }));
 
   const onSubmit = (values) => {
-    const data = {
-      description: values.description,
-      order: parseFloat(values.order),
-      section: sectionId,
-      type: values.type,
-      publishedAt: new Date(),
-    };
-    if (isEditEnabled) {
-      console.log("Editando leccion");
-      mutate(
+    if (!isEditEnabled) {
+      const data = {
+        ...values,
+        order: parseFloat(pagination?.total + 1),
+        section: sectionId,
+      };
+      create(
+        { data },
+        {
+          onSuccess: () => {
+            console.log("Lección creada");
+            showAlert("success", "Lección creada");
+            queryClient.invalidateQueries(QUERY_KEYS.lessons);
+            modalHandler.close();
+          },
+          onError: (error) => {
+            console.log(error);
+            showAlert("error", "Ha ocurrido un error");
+            modalHandler.close();
+          },
+        }
+      );
+    }
+
+    if (isEditEnabled && isDirty) {
+      const data = getDirtyValues(dirtyFields, values); // Get only the fields that have been changed
+
+      update(
         { id: defaultValues.id, data },
         {
           onSuccess: () => {
@@ -59,6 +80,7 @@ export default function LessonForm({ defaultValues, sectionId }) {
           onError: (error) => {
             console.log(error);
             showAlert("error", "Ha ocurrido un error");
+
             modalHandler.close();
           },
         }
@@ -66,24 +88,6 @@ export default function LessonForm({ defaultValues, sectionId }) {
 
       return;
     }
-
-    console.log("Creando lección");
-    mutate(
-      { data },
-      {
-        onSuccess: () => {
-          console.log("Lección creada");
-          showAlert("success", "Lección creada");
-          queryClient.invalidateQueries(QUERY_KEYS.lessons);
-          modalHandler.close();
-        },
-        onError: (error) => {
-          console.log(error);
-          showAlert("error", "Ha ocurrido un error");
-          modalHandler.close();
-        },
-      }
-    );
   };
   return (
     <ModalLayout labelledBy="title" as="form" onSubmit={handleSubmit(onSubmit)} onClose={modalHandler.close}>
@@ -139,29 +143,31 @@ export default function LessonForm({ defaultValues, sectionId }) {
           )}
         />
 
-        <Controller
-          name={"order"}
-          control={control}
-          rules={{ required: "Este campo es requerido" }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <SingleSelect
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value || ""}
-              placeholder="Selecciona el orden"
-              label="Orden"
-              error={fieldState.error?.message}
-            >
-              {Array(ORDER_INPUTS_TO_SHOW)
-                .fill(0)
-                .map((_, index) => (
-                  <SingleSelectOption key={index} value={index + 1}>
-                    {index + 1}
-                  </SingleSelectOption>
-                ))}
-            </SingleSelect>
-          )}
-        />
+        {isEditEnabled && (
+          <Controller
+            name={"order"}
+            control={control}
+            rules={{ required: "Este campo es requerido" }}
+            render={({ field: { onChange, onBlur, value }, fieldState }) => (
+              <SingleSelect
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value || ""}
+                placeholder="Selecciona el orden"
+                label="Orden"
+                error={fieldState.error?.message}
+              >
+                {Array(pagination?.total || 0)
+                  .fill(0)
+                  .map((_, index) => (
+                    <SingleSelectOption key={index} value={index + 1}>
+                      {index + 1}
+                    </SingleSelectOption>
+                  ))}
+              </SingleSelect>
+            )}
+          />
+        )}
       </ModalBody>
 
       <ModalFooter

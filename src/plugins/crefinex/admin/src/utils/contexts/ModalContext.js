@@ -24,6 +24,9 @@ export const ModalProvider = ({ children }) => {
       setDataToEdit(data);
     } else if (type === "delete") {
       setIdToDelete(idToBeEditedOrDeleted);
+    } else if (type === "status") {
+      setIdToEdit(idToBeEditedOrDeleted);
+      setDataToEdit(data);
     }
   };
 

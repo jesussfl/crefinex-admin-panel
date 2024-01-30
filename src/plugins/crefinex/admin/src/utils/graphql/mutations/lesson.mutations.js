@@ -12,10 +12,8 @@ export const createLesson = gql`
 
 export const updateLesson = gql`
   mutation ($id: ID!, $data: CrefinexLessonInput!) {
-    updateCrefinexLesson(id: $id, data: $data) {
-      data {
-        id
-      }
+    updateLesson(id: $id, data: $data) {
+      id
     }
   }
 `;

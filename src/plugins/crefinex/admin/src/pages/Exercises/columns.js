@@ -13,7 +13,7 @@ const defaultColumns = (modalHandler) => {
     }),
     columnHelper.accessor("content", {
       header: "Contenido JSON",
-      cell: (info) => <Td style={{ whiteSpace: "pre-wrap" }}>{info.getValue()}</Td>,
+      cell: (info) => <Td style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(info.getValue())}</Td>,
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor("order", {

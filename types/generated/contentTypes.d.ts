@@ -590,7 +590,7 @@ export interface PluginCrefinexLesson extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     section: Attribute.Relation<
@@ -619,9 +619,10 @@ export interface PluginCrefinexLesson extends Schema.CollectionType {
     type: Attribute.Enumeration<['gift', 'lesson', 'exam']> &
       Attribute.Required &
       Attribute.DefaultTo<'lesson'>;
+    status: Attribute.Enumeration<['draft', 'archive', 'published']> &
+      Attribute.DefaultTo<'draft'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'plugin::crefinex.lesson',
       'oneToOne',
@@ -646,7 +647,7 @@ export interface PluginCrefinexExercise extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     type: Attribute.Enumeration<
@@ -659,9 +660,10 @@ export interface PluginCrefinexExercise extends Schema.CollectionType {
     >;
     order: Attribute.Decimal;
     content: Attribute.JSON & Attribute.Required;
+    status: Attribute.Enumeration<['draft', 'published']> &
+      Attribute.DefaultTo<'draft'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'plugin::crefinex.exercise',
       'oneToOne',

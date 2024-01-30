@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -50,6 +50,15 @@
       ],
       "default": "lesson",
       "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "archive",
+        "published"
+      ],
+      "default": "draft"
     }
   }
 }

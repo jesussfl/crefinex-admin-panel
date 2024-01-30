@@ -24,11 +24,11 @@ function WordMemoryForm() {
               rules={{
                 required: "Este campo es requerido",
               }}
-              render={({ field, fieldState }) => (
+              render={({ field: { onChange, onBlur, value }, fieldState }) => (
                 <TextInput
-                  onChange={field.onChange}
-                  onBlur={field.onBlur}
-                  value={field.value || ""}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value || ""}
                   label={"Palabra " + (index + 1)}
                   error={fieldState.error?.message}
                 />
@@ -40,12 +40,12 @@ function WordMemoryForm() {
               rules={{
                 required: "Este campo es requerido",
               }}
-              render={({ field, fieldState }) => (
+              render={({ field: { onChange, onBlur, value }, fieldState }) => (
                 <div style={{ width: "100%" }}>
                   <TextInput
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    value={field.value || ""}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value || ""}
                     label={"Definición " + (index + 1)}
                     error={fieldState.error?.message}
                   />
@@ -70,7 +70,16 @@ function WordMemoryForm() {
         </div>
       ))}
 
-      <Button variant="secondary" startIcon={<Plus />} onClick={() => append()}>
+      <Button
+        variant="secondary"
+        startIcon={<Plus />}
+        onClick={() =>
+          append({
+            word: "",
+            definition: "",
+          })
+        }
+      >
         Añadir nueva palabra - definición
       </Button>
     </>

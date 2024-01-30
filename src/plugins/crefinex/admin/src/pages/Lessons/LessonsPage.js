@@ -14,7 +14,7 @@ import { getLessonsBySection } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
-import { DeleteDialog } from "./components/dialog";
+import { DeleteDialog, StatusDialog } from "./components/dialog";
 
 function LessonsPage() {
   const history = useHistory();
@@ -54,6 +54,7 @@ function LessonsPage() {
             <LessonForm sectionId={sectionId} defaultValues={defaultValues} />
           )}
           {modalHandler.type === "delete" && <DeleteDialog />}
+          {modalHandler.type === "status" && <StatusDialog status={defaultValues} />}
         </ContentLayout>
       </Layout>
     </Box>

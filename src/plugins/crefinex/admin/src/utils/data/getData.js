@@ -42,7 +42,7 @@ export const getSections = () => {
 
 export const getLessonsBySection = (sectionId) => {
   const [lessons, setLessons] = useState([]);
-
+  const [pagination, setPagination] = useState({});
   const search = useLocation().search;
   const params = new URLSearchParams(search);
   const start = Number(params.get("page"));
@@ -52,9 +52,11 @@ export const getLessonsBySection = (sectionId) => {
 
   useEffect(() => {
     setLessons(formatData(data?.lessonsBySection?.lessons));
+    setPagination(data?.lessonsBySection?.pagination);
   }, [data]);
 
   return {
+    pagination,
     lessons,
     isLoading,
     error,
@@ -63,6 +65,7 @@ export const getLessonsBySection = (sectionId) => {
 
 export const getExercisesByLesson = (lessonId) => {
   const [exercises, setExercises] = useState([]);
+  const [pagination, setPagination] = useState({});
 
   const search = useLocation().search;
   const params = new URLSearchParams(search);
@@ -73,9 +76,11 @@ export const getExercisesByLesson = (lessonId) => {
 
   useEffect(() => {
     setExercises(formatData(data?.exercisesByLesson?.exercises));
+    setPagination(data?.exercisesByLesson?.pagination);
   }, [data]);
 
   return {
+    pagination,
     exercises,
     isLoading,
     error,

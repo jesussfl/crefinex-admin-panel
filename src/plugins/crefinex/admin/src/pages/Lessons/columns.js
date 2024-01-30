@@ -1,8 +1,8 @@
 import React from "react";
-import { Flex, Link, IconButton, Box } from "@strapi/design-system";
+import { Flex, Link, IconButton, Box, Button } from "@strapi/design-system";
 import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ArrowRight, Trash, Pencil } from "@strapi/icons";
+import { ArrowRight, Trash, Pencil, CheckCircle } from "@strapi/icons";
 const columnHelper = createColumnHelper();
 const defaultColumns = (modalHandler) => {
   return [
@@ -17,7 +17,14 @@ const defaultColumns = (modalHandler) => {
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor("order", {
-      header: "Orden",
+      header: ({ column }) => {
+        return (
+          <Button variant="tertiary" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+            Orden
+            {column.getIsSorted() === "desc" ? " ↓" : " ↑"}
+          </Button>
+        );
+      },
       cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),
@@ -43,9 +50,20 @@ const defaultColumns = (modalHandler) => {
       },
       footer: (info) => info.column.id,
     }),
-    columnHelper.accessor("publishedAt", {
-      header: "Publicado",
-      cell: (info) => (info.getValue() ? new Date(info.getValue()).toLocaleString() : info.getValue()),
+
+    columnHelper.accessor("status", {
+      header: "Estado",
+      cell: (info) => {
+        return info.getValue() === "published" ? (
+          <Flex gap={1}>
+            <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "green" }} color="success" /> Publicado
+          </Flex>
+        ) : (
+          <Flex gap={1}>
+            <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "gray" }} color="gray" /> En borrador
+          </Flex>
+        );
+      },
       footer: (info) => info.column.id,
     }),
     columnHelper.display({
@@ -62,6 +80,14 @@ const defaultColumns = (modalHandler) => {
                 label="Editar"
                 noBorder
                 icon={<Pencil />}
+              />
+            </Box>
+            <Box paddingLeft={1}>
+              <IconButton
+                onClick={() => modalHandler.open("status", info.row.original.id, info.row.original.status)}
+                label="Publicar"
+                noBorder
+                icon={<CheckCircle />}
               />
             </Box>
             <Box paddingLeft={1}>

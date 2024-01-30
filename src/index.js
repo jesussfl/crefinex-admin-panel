@@ -6,8 +6,9 @@ const types = require("./plugins/crefinex/server/graphql/typeDefs/types");
 const {
   resolvers: lessonsCompletedMutationResolvers,
 } = require("./plugins/crefinex/server/graphql/modules/lessonCompletedMutation.module");
-const { updateSection } = require("./plugins/crefinex/server/graphql/modules/section.update");
-
+const { updateSection } = require("./plugins/crefinex/server/graphql/resolvers/mutations/section.resolvers");
+const { updateLesson } = require("./plugins/crefinex/server/graphql/resolvers/mutations/lesson.resolvers");
+const { updateExercise } = require("./plugins/crefinex/server/graphql/resolvers/mutations/exercise.resolvers");
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -30,6 +31,8 @@ module.exports = {
         Mutation: {
           ...lessonsCompletedMutationResolvers,
           updateSection, // IMPORTANT This should be the new way to include resolvers
+          updateLesson,
+          updateExercise,
         },
       },
     }));

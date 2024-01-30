@@ -31,10 +31,11 @@ const resolvers = {
         sort: { order: "asc" },
         filters: {
           world: args.id,
+          lessons: { id: { $notNull: true } },
         },
         pagination: { page: args.start, pageSize: args.limit },
       });
-
+      console.log("sectionsData", sectionsData);
       //This extra info is needed for breadcrumbs
       const { results: worldData } = await strapi.services["plugin::crefinex.world"].find({
         filters: { id: args.id },

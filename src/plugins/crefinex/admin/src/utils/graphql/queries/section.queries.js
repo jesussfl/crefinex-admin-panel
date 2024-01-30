@@ -10,9 +10,9 @@ export const querySections = gql`
           order
           content
           contentTitle
+          status
           createdAt
           updatedAt
-          publishedAt
           lessons {
             data {
               id

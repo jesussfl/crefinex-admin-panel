@@ -8,7 +8,7 @@
     "description": "hola"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -43,6 +43,16 @@
     },
     "contentTitle": {
       "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "published",
+        "archive"
+      ],
+      "default": "draft",
+      "required": false
     }
   }
 }

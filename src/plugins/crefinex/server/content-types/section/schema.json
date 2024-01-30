@@ -8,7 +8,7 @@
     "description": "hola"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -31,6 +31,7 @@
       "required": true,
       "unique": false
     },
+
     "world": {
       "type": "relation",
       "relation": "manyToOne",

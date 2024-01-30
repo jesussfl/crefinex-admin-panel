@@ -31,6 +31,7 @@ const resolvers = {
         sort: { order: "asc" },
         filters: {
           world: args.id,
+          status: "published",
           lessons: { id: { $notNull: true } },
         },
         pagination: { page: args.start, pageSize: args.limit },

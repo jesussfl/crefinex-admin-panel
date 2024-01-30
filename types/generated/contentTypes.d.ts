@@ -491,7 +491,7 @@ export interface PluginCrefinexSection extends Schema.CollectionType {
     description: 'hola';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     description: Attribute.String &
@@ -514,9 +514,10 @@ export interface PluginCrefinexSection extends Schema.CollectionType {
     >;
     content: Attribute.RichText & Attribute.Required;
     contentTitle: Attribute.String;
+    status: Attribute.Enumeration<['draft', 'published', 'archive']> &
+      Attribute.DefaultTo<'draft'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'plugin::crefinex.section',
       'oneToOne',

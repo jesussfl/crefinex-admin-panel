@@ -54,7 +54,6 @@ export default function SectionForm({ defaultValues }) {
       const data = {
         ...values,
         order: parseFloat(pagination?.total + 1),
-        publishedAt: new Date(),
       };
 
       create(
@@ -199,6 +198,18 @@ export default function SectionForm({ defaultValues }) {
               displayName={"Contenido de la sección"}
               error={fieldState.error?.message}
             />
+          )}
+        />
+        <Controller
+          name={"status"}
+          control={form.control}
+          rules={{ required: "Este campo es requerido" }}
+          render={({ field, fieldState }) => (
+            <SingleSelect {...field} placeholder="Selecciona el estado" label="Estado" error={fieldState.error?.message}>
+              <SingleSelectOption value={"draft"}>En borrador</SingleSelectOption>
+              <SingleSelectOption value={"published"}>Publicado</SingleSelectOption>
+              <SingleSelectOption value={"archive"}>Archivado</SingleSelectOption>
+            </SingleSelect>
           )}
         />
       </ModalBody>

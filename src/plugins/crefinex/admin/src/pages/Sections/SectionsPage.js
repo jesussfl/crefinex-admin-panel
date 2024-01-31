@@ -4,6 +4,7 @@ import React from "react";
 import { BaseHeaderLayout, Box, Button, ContentLayout, Layout } from "@strapi/design-system";
 import { CustomAlert, Loader } from "../../components";
 import { Plus } from "@strapi/icons";
+import { DeleteDialog, StatusDialog } from "./components/dialog";
 import Table from "../../components/Table";
 import SectionForm from "./components/form";
 
@@ -13,7 +14,6 @@ import { getSections } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
-import { DeleteDialog, StatusDialog } from "./components/dialog";
 
 function SectionsPage() {
   const { modalHandler, defaultValues } = useModal();

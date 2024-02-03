@@ -28,15 +28,10 @@ import TheoryExerciseForm from "./theoryExerciseForm";
 import { getExercisesByLesson } from "../../../../utils/data/getData";
 import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 
-// Constants
-const ORDER_INPUTS_TO_SHOW = 20;
-
-export default function ExerciseForm({ defaultValues, lessonId }) {
-  const { modalHandler } = useModal();
+export default function ExerciseForm({ lessonId }) {
+  const { modalHandler, defaultValues } = useModal();
   const { showAlert } = useAlert();
   const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
-
-  // Default values have to be parsed in case the form is in edit mode. This is because content is a JSON string
 
   const queryClient = useQueryClient();
   const form = useForm({ defaultValues });

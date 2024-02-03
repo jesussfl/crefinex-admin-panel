@@ -38,11 +38,6 @@ const defaultColumns = (modalHandler) => {
       },
       footer: (info) => info.column.id,
     }),
-    columnHelper.accessor("publishedAt", {
-      header: "Publicado",
-      cell: (info) => (info.getValue() ? new Date(info.getValue()).toLocaleString() : info.getValue()),
-      footer: (info) => info.column.id,
-    }),
     columnHelper.display({
       header: "Acciones",
       cell: (info) => (

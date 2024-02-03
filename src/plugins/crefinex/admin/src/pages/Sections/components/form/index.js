@@ -25,18 +25,19 @@ import { createSection, updateSection } from "../../../../utils/graphql/mutation
 import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
 import { getSections } from "../../../../utils/data/getData";
+import { CustomAlert, Loader } from "../../../../components";
 
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_WYSIWYG_LENGTH = 1000;
 const MIN_DESCRIPTION_LENGTH = 10;
 
-export default function SectionForm({ defaultValues }) {
+export default function SectionForm() {
+  // Utilities
+  const { modalHandler, defaultValues } = useModal();
+  const { showAlert } = useAlert();
+
   // This is used to know if the form is in edit mode
   const isEditEnabled = !!defaultValues;
-
-  // Utilities
-  const { modalHandler } = useModal();
-  const { showAlert } = useAlert();
 
   // Form management
   const form = useForm({ defaultValues });
@@ -46,8 +47,8 @@ export default function SectionForm({ defaultValues }) {
   const queryClient = useQueryClient();
   const { data: worlds, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
   const { pagination } = getSections();
-  const { mutate: create } = useMutation((data) => query(createSection, { ...data }));
-  const { mutate: update } = useMutation((data) => query(updateSection, { ...data }));
+  const { mutate: create } = useMutation((data) => query(createSection, data));
+  const { mutate: update } = useMutation((data) => query(updateSection, data));
 
   const onSubmit = (values) => {
     if (!isEditEnabled) {
@@ -92,6 +93,10 @@ export default function SectionForm({ defaultValues }) {
       return;
     }
   };
+
+  if (isLoading && !worlds) return <Loader />;
+  if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
+
   return (
     <ModalLayout labelledBy="title" as="form" onSubmit={form.handleSubmit(onSubmit)} onClose={modalHandler.close}>
       <ModalHeader>

@@ -16,11 +16,13 @@ import { getSections } from "../../utils/data/getData";
 import defaultColumns from "./columns";
 
 function SectionsPage() {
-  const { modalHandler, defaultValues } = useModal();
+  const { modalHandler } = useModal();
   const { sections, isLoading, error } = getSections();
-  console.log(modalHandler.type);
+  const isModalOpen = modalHandler.type === "create" || modalHandler.type === "edit";
+
   if (isLoading && !sections) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
+
   return (
     <Box>
       <Layout>
@@ -36,11 +38,11 @@ function SectionsPage() {
         />
         <ContentLayout>
           <Table data={sections} columns={defaultColumns(modalHandler)} />
-          {(modalHandler.type === "create" || modalHandler.type === "edit") && <SectionForm defaultValues={defaultValues} />}
-          {modalHandler.type === "delete" && <DeleteDialog />}
-          {modalHandler.type === "status" && <StatusDialog status={defaultValues} />}
         </ContentLayout>
       </Layout>
+      {isModalOpen && <SectionForm />}
+      <DeleteDialog />
+      <StatusDialog />
     </Box>
   );
 }

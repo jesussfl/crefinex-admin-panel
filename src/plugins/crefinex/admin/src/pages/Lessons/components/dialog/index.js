@@ -1,27 +1,28 @@
 import React from "react";
 
-import { Typography, Button, Flex, Dialog, DialogBody, DialogFooter } from "@strapi/design-system";
+import { Typography } from "@strapi/design-system";
 
 import { CheckCircle, ExclamationMarkCircle, Trash } from "@strapi/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteLesson, updateLesson } from "../../../../utils/graphql/mutations/lesson.mutations";
 import { QUERY_KEYS } from "../../../../utils/constants/queryKeys.constants";
 import { useModal } from "../../../../utils";
 import { query } from "../../../../utils/graphql/client/GraphQLCLient";
 
 import { useAlert } from "../../../../utils/contexts/AlertContext";
+import { ConfirmationDialog } from "../../../../components/confirmationDialog";
+import { deleteLesson, updateLesson } from "../../../../utils/graphql/mutations/lesson.mutations";
 
 export function DeleteDialog() {
   const { showAlert } = useAlert();
   const { modalHandler } = useModal();
   const queryClient = useQueryClient();
-  const { mutate } = useMutation((data) => query(deleteLesson, { ...data }));
+  const { mutate } = useMutation((data) => query(deleteLesson, data));
   const onSubmit = () => {
     mutate(
       { id: modalHandler.id },
       {
         onSuccess: () => {
-          showAlert("success", `Lección eliminada`);
+          showAlert("success", `Sección eliminada`);
           queryClient.invalidateQueries(QUERY_KEYS.lessons);
 
           modalHandler.close();
@@ -35,43 +36,30 @@ export function DeleteDialog() {
     );
   };
   return (
-    <Dialog onClose={modalHandler.close} title="Confirmación" isOpen={modalHandler.type === "delete"}>
-      <DialogBody icon={<ExclamationMarkCircle />}>
-        <Flex direction="column" alignItems="center" gap={2}>
-          <Flex justifyContent="center">
-            <Typography id="confirm-description">¿Estás seguro de que deseas eliminar esta lección?</Typography>
-          </Flex>
-        </Flex>
-      </DialogBody>
-      <DialogFooter
-        startAction={
-          <Button onClick={modalHandler.close} variant="tertiary">
-            Cancelar
-          </Button>
-        }
-        endAction={
-          <Button variant="danger" startIcon={<Trash />} type="submit" onClick={onSubmit}>
-            Confirmar
-          </Button>
-        }
-      />
-    </Dialog>
+    <ConfirmationDialog
+      title="Eliminar lección"
+      onConfirm={onSubmit}
+      onClose={modalHandler.close}
+      isOpen={modalHandler.type === "delete"}
+      icon={<ExclamationMarkCircle />}
+    >
+      <Typography id="confirm-description">¿Estás seguro de que deseas eliminar esta lección?</Typography>
+    </ConfirmationDialog>
   );
 }
 
-export function StatusDialog({ status }) {
+export function StatusDialog() {
   const { showAlert } = useAlert();
-  const { modalHandler } = useModal();
+  const { modalHandler, defaultValues: status } = useModal();
   const queryClient = useQueryClient();
-  const { mutate: update } = useMutation((data) => query(updateLesson, { ...data }));
+  const { mutate: updateStatus } = useMutation((data) => query(updateLesson, data));
   const onSubmit = () => {
-    console.log(status);
-    update(
+    updateStatus(
       { id: modalHandler.id, data: { status: status === "published" ? "draft" : "published" } },
       {
         onSuccess: () => {
           showAlert("success", `Estado editado`);
-          queryClient.invalidateQueries(QUERY_KEYS.sections);
+          queryClient.invalidateQueries(QUERY_KEYS.lessons);
 
           modalHandler.close();
         },
@@ -84,32 +72,18 @@ export function StatusDialog({ status }) {
     );
   };
   return (
-    <Dialog
+    <ConfirmationDialog
+      title="Cambiar estado"
+      onConfirm={onSubmit}
       onClose={modalHandler.close}
-      title={status === "published" ? "Colocar en borradores" : "Publicar lección"}
       isOpen={modalHandler.type === "status"}
+      icon={status === "published" ? <Trash /> : <CheckCircle />}
     >
-      <DialogBody>
-        <Flex direction="column" alignItems="center" gap={2}>
-          <Flex justifyContent="center">
-            <Typography id="confirm-description">
-              ¿Estás seguro de que deseas {status === "published" ? "colocar en borradores" : "publicar"} esta lección?
-            </Typography>
-          </Flex>
-        </Flex>
-      </DialogBody>
-      <DialogFooter
-        startAction={
-          <Button onClick={modalHandler.close} variant="tertiary">
-            Cancelar
-          </Button>
-        }
-        endAction={
-          <Button variant={status === "published" ? "danger" : "success"} startIcon={<CheckCircle />} type="submit" onClick={onSubmit}>
-            Confirmar
-          </Button>
-        }
-      />
-    </Dialog>
+      <Typography id="confirm-description" textAlign="center">
+        {status === "published"
+          ? "¿Estás seguro de que deseas despublicar esta lección?"
+          : "¿Estás seguro de que deseas publicar esta lección?"}
+      </Typography>
+    </ConfirmationDialog>
   );
 }

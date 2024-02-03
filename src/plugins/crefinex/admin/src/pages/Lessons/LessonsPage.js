@@ -19,8 +19,9 @@ import { DeleteDialog, StatusDialog } from "./components/dialog";
 function LessonsPage() {
   const history = useHistory();
   const { sectionId } = useParams();
-  const { modalHandler, defaultValues } = useModal();
+  const { modalHandler } = useModal();
   const { lessons, isLoading, error } = getLessonsBySection(sectionId);
+  const isModalOpen = modalHandler.type === "create" || modalHandler.type === "edit";
 
   if (isLoading) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
@@ -50,13 +51,11 @@ function LessonsPage() {
         />
         <ContentLayout>
           <Table data={lessons} columns={defaultColumns(modalHandler)} />
-          {(modalHandler.type === "create" || modalHandler.type === "edit") && (
-            <LessonForm sectionId={sectionId} defaultValues={defaultValues} />
-          )}
-          {modalHandler.type === "delete" && <DeleteDialog />}
-          {modalHandler.type === "status" && <StatusDialog status={defaultValues} />}
         </ContentLayout>
       </Layout>
+      {isModalOpen && <LessonForm sectionId={sectionId} />}
+      <DeleteDialog />
+      <StatusDialog />
     </Box>
   );
 }

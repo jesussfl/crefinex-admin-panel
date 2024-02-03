@@ -28,10 +28,11 @@ import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 const MAX_DESCRIPTION_LENGTH = 100;
 const MIN_DESCRIPTION_LENGTH = 10;
 
-export default function LessonForm({ defaultValues, sectionId }) {
-  const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
+export default function LessonForm({ sectionId }) {
   const { showAlert } = useAlert();
-  const { modalHandler } = useModal();
+  const { modalHandler, defaultValues } = useModal();
+
+  const isEditEnabled = !!defaultValues; // This variable is used to check if the form is in edit mode
 
   const queryClient = useQueryClient();
   const { pagination } = getLessonsBySection(sectionId);

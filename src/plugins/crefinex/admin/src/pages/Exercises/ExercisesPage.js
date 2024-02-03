@@ -22,8 +22,9 @@ function ExercisesPage() {
   const { lessonId } = useParams();
   const { exercises, isLoading, error } = getExercisesByLesson(lessonId);
 
-  if (isLoading) return <Loader />;
+  const isModalOpen = modalHandler.type === "create" || modalHandler.type === "edit";
 
+  if (isLoading) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
 
   return (
@@ -53,12 +54,10 @@ function ExercisesPage() {
 
         <ContentLayout>
           <Table data={exercises} columns={defaultColumns(modalHandler)} />
-          {(modalHandler.type === "create" || modalHandler.type === "edit") && (
-            <ExerciseForm defaultValues={defaultValues} lessonId={lessonId} />
-          )}
-          {modalHandler.type === "delete" && <DeleteDialog />}
         </ContentLayout>
       </Layout>
+      {isModalOpen && <ExerciseForm defaultValues={defaultValues} lessonId={lessonId} />}
+      <DeleteDialog />
     </Box>
   );
 }

@@ -65,10 +65,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "currentWorld": {
-      "type": "integer",
-      "default": 1
-    },
     "money": {
       "type": "decimal",
       "default": 50
@@ -113,6 +109,10 @@
     },
     "expoPushToken": {
       "type": "string"
+    },
+    "currentWorld": {
+      "type": "integer",
+      "required": true
     }
   }
 }

@@ -37,6 +37,10 @@
       "relation": "oneToMany",
       "target": "plugin::crefinex.section",
       "mappedBy": "world"
+    },
+    "order": {
+      "required": false,
+      "type": "integer"
     }
   }
 }

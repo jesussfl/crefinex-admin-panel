@@ -34,7 +34,7 @@ type LessonsBySection {
     data: CrefinexSectionEntity
   }
   extend type UsersPermissionsMe{
-    currentWorld: Int
+    currentWorld: Int 
     money: Float
     lives: Int
     streak_start_date: DateTime
@@ -43,6 +43,9 @@ type LessonsBySection {
     next_life_regeneration: DateTime
     expoPushToken: String
   }
+ extend type UsersPermissionsRegisterInput {
+   currentWorld: Int
+ }
 `;
 
 module.exports = types;

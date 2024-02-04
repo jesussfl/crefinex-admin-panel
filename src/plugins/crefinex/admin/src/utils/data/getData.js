@@ -20,7 +20,6 @@ const findById = (queryFn, id, start, limit) => {
 export const getSections = () => {
   const [sections, setSections] = useState([]);
   const [pagination, setPagination] = useState({});
-
   const search = useLocation().search;
   const params = new URLSearchParams(search);
   const start = Number(params.get("page"));

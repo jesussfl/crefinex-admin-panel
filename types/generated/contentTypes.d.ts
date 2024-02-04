@@ -563,6 +563,7 @@ export interface PluginCrefinexWorld extends Schema.CollectionType {
       'oneToMany',
       'plugin::crefinex.section'
     >;
+    order: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1006,7 +1007,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    currentWorld: Attribute.Integer & Attribute.DefaultTo<1>;
     money: Attribute.Decimal & Attribute.DefaultTo<50>;
     lives: Attribute.Integer &
       Attribute.SetMinMax<{
@@ -1034,6 +1034,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     registration_date: Attribute.DateTime;
     next_life_regeneration: Attribute.DateTime;
     expoPushToken: Attribute.String;
+    currentWorld: Attribute.Integer & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

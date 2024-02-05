@@ -45,26 +45,5 @@ module.exports = {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap({ strapi }) {
-    process.nextTick(() => {
-      var io = require("socket.io")(strapi.server.httpServer, {
-        cors: {
-          origin: "http://172.16.0.2:1337",
-          methods: ["GET", "POST"],
-        },
-      });
-
-      io.on("connection", async function (socket) {
-        console.log(`a user connected`);
-        // send message on user connection
-        socket.emit("hello", { message: "Welcome to my website" });
-
-        // listen for user diconnect
-        socket.on("disconnect", () => {
-          console.log("a user disconnected");
-        });
-      });
-      strapi.io = io; // register socket io inside strapi main object to use it globally anywhere
-    });
-  },
+  bootstrap({ strapi }) {},
 };

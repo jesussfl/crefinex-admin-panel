@@ -9,8 +9,8 @@ import { formatData } from "../helpers/reduceAttributesFromData";
 import { queryExercisesByLesson } from "../graphql/queries/exercise.queries";
 import { queryWorlds } from "../graphql/queries/world.queries";
 
-const findAll = (queryFn, start, limit) => {
-  return query(queryFn, { start, limit });
+const findAll = async (queryFn, start, limit) => {
+  return await query(queryFn, { start, limit });
 };
 
 const findById = (queryFn, id, start, limit) => {
@@ -18,13 +18,14 @@ const findById = (queryFn, id, start, limit) => {
 };
 
 export const getSections = () => {
+  console.log("getSections");
   const [sections, setSections] = useState([]);
   const [pagination, setPagination] = useState({});
   const search = useLocation().search;
   const params = new URLSearchParams(search);
   const start = Number(params.get("page"));
   const limit = Number(params.get("pageSize"));
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections], () => findAll(querySections, start, limit));
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections], async () => findAll(querySections, start, limit));
 
   useEffect(() => {
     setSections(formatData(data?.sections?.data));

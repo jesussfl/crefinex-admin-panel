@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Components and icons
 import { BaseHeaderLayout, Box, Button, ContentLayout, Layout } from "@strapi/design-system";
@@ -14,14 +14,25 @@ import { getSections } from "../../utils/data/getData";
 
 // Columns
 import defaultColumns from "./columns";
+import useSocketStore from "../../stores/useSocketStore";
+// import useSocketStore from "../../stores/useSocketStore";
 
 function SectionsPage() {
   const { modalHandler } = useModal();
   const { sections, isLoading, error } = getSections();
+  const { socket, connect, emit } = useSocketStore((state) => state);
   const isModalOpen = modalHandler.type === "create" || modalHandler.type === "edit";
-
   if (isLoading && !sections) return <Loader />;
   if (error) return <CustomAlert data={{ type: "error", message: error.name }} />;
+
+  useEffect(() => {
+    connect();
+  }, [connect]);
+
+  useEffect(() => {
+    if (!socket) return;
+    emit("join", { socketId: socket.id, name: "admin" });
+  }, [socket?.id]);
 
   return (
     <Box>
@@ -38,6 +49,7 @@ function SectionsPage() {
         />
         <ContentLayout>
           <Table data={sections} columns={defaultColumns(modalHandler)} />
+          <Button onClick={() => emit("broadcast", { message: "holiwis" })}>Enviar evento</Button>
         </ContentLayout>
       </Layout>
       {isModalOpen && <SectionForm />}

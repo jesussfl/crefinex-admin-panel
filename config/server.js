@@ -7,9 +7,9 @@ module.exports = ({ env }) => ({
     keys: env.array("APP_KEYS"),
   },
   url: env("PUBLIC_URL"),
-  // webhooks: {
-  //   populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),
-  // },
+  webhooks: {
+    populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),
+  },
   cron: {
     enabled: false,
     // tasks: cronTasks,

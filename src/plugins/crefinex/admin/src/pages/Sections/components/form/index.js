@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Components
 import {
@@ -26,13 +26,21 @@ import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
 import { getSections } from "../../../../utils/data/getData";
 import { CustomAlert, Loader } from "../../../../components";
-
+import { io } from "socket.io-client";
 const MAX_DESCRIPTION_LENGTH = 100;
 const MAX_WYSIWYG_LENGTH = 1000;
 const MIN_DESCRIPTION_LENGTH = 10;
 
 export default function SectionForm() {
   // Utilities
+  const socket = io("http://localhost:1337");
+
+  useEffect(() => {
+    socket.on("hello", (data) => {
+      console.log(data);
+    });
+  }, []);
+
   const { modalHandler, defaultValues } = useModal();
   const { showAlert } = useAlert();
 
@@ -61,8 +69,8 @@ export default function SectionForm() {
         { data },
         {
           onSuccess: () => {
-            console.log("Entrada creada");
             showAlert("success", `Sección creada`);
+            socket.emit("section", { message: "holiwis" });
             queryClient.invalidateQueries(QUERY_KEYS.sections);
             modalHandler.close();
           },

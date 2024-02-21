@@ -42,6 +42,7 @@ type LessonsBySection {
     last_completed_lesson_date: DateTime
     next_life_regeneration: DateTime
     expoPushToken: String
+    first_life_lost_date: DateTime
   }
  extend type UsersPermissionsRegisterInput {
    currentWorld: Int

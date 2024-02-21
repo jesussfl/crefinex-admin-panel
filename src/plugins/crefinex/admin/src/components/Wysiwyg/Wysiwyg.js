@@ -7,7 +7,6 @@ const Wysiwyg = ({ name, onChange, value, displayName, error }) => {
   const [showMediaLibDialog, setShowMediaLibDialog] = useState(false);
   const { components } = useLibrary();
   const MediaLibDialog = components["media-library"];
-  // console.log("value ", value);
   const handleToggleMediaLibDialog = () => {
     setShowMediaLibDialog(!showMediaLibDialog);
   };

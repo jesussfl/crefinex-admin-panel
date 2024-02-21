@@ -362,6 +362,30 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiItemItem extends Schema.CollectionType {
+  collectionName: 'items';
+  info: {
+    singularName: 'item';
+    pluralName: 'items';
+    displayName: 'Items';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    image: Attribute.Media;
+    description: Attribute.Text;
+    price: Attribute.Decimal;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::item.item', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::item.item', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -931,52 +955,6 @@ export interface PluginCrefinexSectionCompleted extends Schema.CollectionType {
   };
 }
 
-export interface PluginExpoNotificationsExponotification
-  extends Schema.CollectionType {
-  collectionName: 'exponotifications';
-  info: {
-    singularName: 'exponotification';
-    pluralName: 'exponotifications';
-    displayName: 'Expo notification';
-  };
-  options: {
-    draftAndPublish: false;
-    comment: '';
-  };
-  pluginOptions: {
-    'content-manager': {
-      visible: true;
-    };
-    'content-type-builder': {
-      visible: 'false';
-    };
-  };
-  attributes: {
-    title: Attribute.String &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    subtitle: Attribute.String;
-    data: Attribute.JSON;
-    receivers: Attribute.JSON;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'plugin::expo-notifications.exponotification',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'plugin::expo-notifications.exponotification',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginI18NLocale extends Schema.CollectionType {
   collectionName: 'i18n_locale';
   info: {
@@ -1188,6 +1166,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     next_life_regeneration: Attribute.DateTime;
     expoPushToken: Attribute.String;
     currentWorld: Attribute.Integer & Attribute.Required;
+    first_life_lost_date: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1215,6 +1194,7 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::item.item': ApiItemItem;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
@@ -1227,7 +1207,6 @@ declare module '@strapi/types' {
       'plugin::crefinex.lesson-completed': PluginCrefinexLessonCompleted;
       'plugin::crefinex.exercise-completed': PluginCrefinexExerciseCompleted;
       'plugin::crefinex.section-completed': PluginCrefinexSectionCompleted;
-      'plugin::expo-notifications.exponotification': PluginExpoNotificationsExponotification;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;

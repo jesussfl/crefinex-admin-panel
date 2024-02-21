@@ -1,11 +1,25 @@
 module.exports = [
   "strapi::errors",
   "strapi::security",
+  // {
+  //   name: "strapi::security",
+  //   config: {
+  //     contentSecurityPolicy: {
+  //       useDefaults: true,
+  //       directives: {
+  //         "connect-src": ["'self'", "https:", "http:"],
+  //         upgradeInsecureRequests: null,
+  //       },
+  //     },
+  //     // header: "*",
+  //     // origin: "*",
+  //   },
+  // },
   {
     name: "strapi::cors",
     config: {
-      header: "*",
       origin: "*",
+      header: "*",
     },
   },
   "strapi::poweredBy",

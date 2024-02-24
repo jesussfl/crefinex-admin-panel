@@ -116,6 +116,11 @@
     },
     "first_life_lost_date": {
       "type": "datetime"
+    },
+    "streak_shields": {
+      "type": "integer",
+      "default": 0,
+      "max": 3
     }
   }
 }

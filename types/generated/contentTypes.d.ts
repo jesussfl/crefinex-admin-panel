@@ -1167,6 +1167,14 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     expoPushToken: Attribute.String;
     currentWorld: Attribute.Integer & Attribute.Required;
     first_life_lost_date: Attribute.DateTime;
+    streak_shields: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          max: 3;
+        },
+        number
+      > &
+      Attribute.DefaultTo<0>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

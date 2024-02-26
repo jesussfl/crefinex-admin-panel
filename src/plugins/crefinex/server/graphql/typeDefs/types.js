@@ -27,9 +27,7 @@ type LessonsBySection {
     worldsCompleted: [CrefinexWorldCompletedEntity]
     pagination: Pagination
   }
-  type CreateOrUpdateLessonCompleted {
-    data: CrefinexLessonCompletedEntity
-  }
+ 
   type UpdateSection {
     data: CrefinexSectionEntity
   }

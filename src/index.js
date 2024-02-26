@@ -3,13 +3,11 @@ const queriesTypeDefs = require("./plugins/crefinex/server/graphql/typeDefs/quer
 const mutationsTypeDefs = require("./plugins/crefinex/server/graphql/typeDefs/mutations");
 const types = require("./plugins/crefinex/server/graphql/typeDefs/types");
 
-const {
-  resolvers: lessonsCompletedMutationResolvers,
-} = require("./plugins/crefinex/server/graphql/modules/lessonCompletedMutation.module");
 const { updateSection } = require("./plugins/crefinex/server/graphql/resolvers/mutations/section.resolvers");
 const { updateLesson } = require("./plugins/crefinex/server/graphql/resolvers/mutations/lesson.resolvers");
 const { updateExercise } = require("./plugins/crefinex/server/graphql/resolvers/mutations/exercise.resolvers");
-
+const { createOrUpdateCompletedLesson } = require("./plugins/crefinex/server/graphql/resolvers/mutations/completedLesson.resolvers");
+const { createOrUpdateCompletedWorld } = require("./plugins/crefinex/server/graphql/resolvers/mutations/completedWorld.resolvers");
 const onlineUsers = new Map();
 let isEmitting = false;
 let sendOnlineUsers;
@@ -33,10 +31,11 @@ module.exports = {
       resolvers: {
         Query: queryResolvers,
         Mutation: {
-          ...lessonsCompletedMutationResolvers,
           updateSection, // IMPORTANT This should be the new way to include resolvers
           updateLesson,
           updateExercise,
+          createOrUpdateCompletedLesson,
+          createOrUpdateCompletedWorld,
         },
       },
     }));

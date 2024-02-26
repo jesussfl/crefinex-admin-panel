@@ -1,7 +1,8 @@
 // mutationsTypeDefs.js
 const mutations = `
   extend type Mutation {
-    createOrUpdateLessonCompleted(user: ID!, lesson: ID!, data: CrefinexLessonCompletedInput): CreateOrUpdateLessonCompleted!
+    createOrUpdateCompletedLesson(user: ID!, lesson: ID!, data: CrefinexLessonCompletedInput): CrefinexLessonCompletedEntity!
+    createOrUpdateCompletedWorld(user: ID!, world: ID!, data: CrefinexWorldCompletedInput): CrefinexWorldCompletedEntity!
     updateSection(id: ID!, data: CrefinexSectionInput): CrefinexSectionEntity!
     updateLesson(id: ID!, data: CrefinexLessonInput): CrefinexLessonEntity!
     updateExercise(id: ID!, data: CrefinexExerciseInput): CrefinexExerciseEntity!

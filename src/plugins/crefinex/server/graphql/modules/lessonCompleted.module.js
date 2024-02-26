@@ -1,3 +1,4 @@
+//DEPRECATED
 const resolvers = {
   lessonsCompletedByUser: {
     resolve: async (parent, args, context) => {

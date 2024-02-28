@@ -67,7 +67,7 @@
     },
     "money": {
       "type": "decimal",
-      "default": 50
+      "default": 300
     },
     "lives": {
       "type": "integer",

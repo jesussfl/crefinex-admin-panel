@@ -1135,7 +1135,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    money: Attribute.Decimal & Attribute.DefaultTo<50>;
+    money: Attribute.Decimal & Attribute.DefaultTo<300>;
     lives: Attribute.Integer &
       Attribute.SetMinMax<
         {

@@ -96,7 +96,8 @@
       "type": "datetime"
     },
     "streak_days": {
-      "type": "integer"
+      "type": "integer",
+      "default": 0
     },
     "last_completed_lesson_date": {
       "type": "datetime"
@@ -107,13 +108,6 @@
     "next_life_regeneration": {
       "type": "datetime"
     },
-    "expoPushToken": {
-      "type": "string"
-    },
-    "currentWorld": {
-      "type": "integer",
-      "required": true
-    },
     "first_life_lost_date": {
       "type": "datetime"
     },
@@ -121,6 +115,11 @@
       "type": "integer",
       "default": 0,
       "max": 3
+    },
+    "current_world": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::crefinex.world"
     }
   }
 }

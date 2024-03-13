@@ -39,7 +39,7 @@
       "mappedBy": "world"
     },
     "order": {
-      "required": false,
+      "required": true,
       "type": "integer"
     }
   }

@@ -39,6 +39,32 @@ module.exports = {
         },
       },
     }));
+    extensionService.use(({ nexus }) => ({
+      types: [
+        nexus.extendType({
+          type: "UsersPermissionsMe",
+          definition(t) {
+            t.string("current_world", {
+              type: "CrefinexWorldEntityResponse",
+              resolve: async (root, args) => {
+                const user = await strapi.entityService.findOne("plugin::users-permissions.user", root.id, {
+                  populate: {
+                    current_world: true,
+                  },
+                });
+
+                const { toEntityResponse } = strapi.plugin("graphql").service("format").returnTypes;
+                console.dir(user.current_world);
+                return toEntityResponse(user.current_world ?? null, {
+                  args,
+                  resourceUID: "plugin::crefinex.world",
+                });
+              },
+            });
+          },
+        }),
+      ],
+    }));
   },
 
   /**

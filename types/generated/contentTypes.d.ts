@@ -688,7 +688,7 @@ export interface PluginCrefinexWorld extends Schema.CollectionType {
       'oneToMany',
       'plugin::crefinex.section'
     >;
-    order: Attribute.Integer;
+    order: Attribute.Integer & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1160,12 +1160,10 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::crefinex.section-completed'
     >;
     streak_start_date: Attribute.DateTime;
-    streak_days: Attribute.Integer;
+    streak_days: Attribute.Integer & Attribute.DefaultTo<0>;
     last_completed_lesson_date: Attribute.DateTime;
     registration_date: Attribute.DateTime;
     next_life_regeneration: Attribute.DateTime;
-    expoPushToken: Attribute.String;
-    currentWorld: Attribute.Integer & Attribute.Required;
     first_life_lost_date: Attribute.DateTime;
     streak_shields: Attribute.Integer &
       Attribute.SetMinMax<
@@ -1175,6 +1173,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
         number
       > &
       Attribute.DefaultTo<0>;
+    current_world: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'plugin::crefinex.world'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

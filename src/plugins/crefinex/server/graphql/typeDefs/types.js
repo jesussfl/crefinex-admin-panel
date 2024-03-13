@@ -27,12 +27,13 @@ type LessonsBySection {
     worldsCompleted: [CrefinexWorldCompletedEntity]
     pagination: Pagination
   }
- 
+  extend type CrefinexWorld {
+    id: ID
+  }
   type UpdateSection {
     data: CrefinexSectionEntity
   }
   extend type UsersPermissionsMe{
-    currentWorld: Int 
     money: Float
     lives: Int
     streak_start_date: DateTime
@@ -45,7 +46,7 @@ type LessonsBySection {
 
   }
  extend type UsersPermissionsRegisterInput {
-   currentWorld: Int
+   current_world: ID
  }
 `;
 

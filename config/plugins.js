@@ -11,8 +11,8 @@ module.exports = ({ env }) => ({
         apiKey: env("RESEND_API_KEY"), // Required
       },
       settings: {
-        defaultFrom: "jesussflr@gmail.com",
-        defaultReplyTo: "jesussflr@gmail.com",
+        defaultFrom: "onboarding@resend.dev",
+        defaultReplyTo: "onboarding@resend.dev",
       },
     },
   },

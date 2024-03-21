@@ -12,8 +12,7 @@ const resolvers = {
       const { toEntityResponseCollection } = strapi.service("plugin::graphql.format").returnTypes;
 
       //This extra info is needed for breadcrumbs
-      const { results } = await strapi.services[UID].find();
-
+      const results = await strapi.entityService.findMany(UID);
       const response = toEntityResponseCollection(results, {
         args: { start: args.start, limit: args.limit },
         resourceUID: UID,

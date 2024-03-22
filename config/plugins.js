@@ -11,8 +11,8 @@ module.exports = ({ env }) => ({
         apiKey: env("RESEND_API_KEY"), // Required
       },
       settings: {
-        defaultFrom: "onboarding@resend.dev",
-        defaultReplyTo: "onboarding@resend.dev",
+        defaultFrom: "noreply@crefinex.com",
+        defaultReplyTo: "noreply@crefinex.com",
       },
     },
   },

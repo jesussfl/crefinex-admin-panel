@@ -104,7 +104,7 @@ coverage
 ############################
 # Strapi
 ############################
-
+.strapi
 .env
 .env.production
 license.txt

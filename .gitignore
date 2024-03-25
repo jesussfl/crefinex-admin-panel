@@ -104,7 +104,6 @@ coverage
 ############################
 # Strapi
 ############################
-.strapi
 .env
 .env.production
 license.txt
@@ -114,3 +113,5 @@ dist
 build
 .strapi-updater.json
 # path: ./.gitignore
+.strapi
+types

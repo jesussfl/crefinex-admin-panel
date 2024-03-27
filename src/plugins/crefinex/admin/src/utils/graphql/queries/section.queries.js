@@ -41,3 +41,38 @@ export const querySections = gql`
     }
   }
 `;
+
+export const querySectionsByWorld = gql`
+  query ($id: ID!, $start: Int, $limit: Int) {
+    sectionsByWorldId(id: $id, start: $start, limit: $limit) {
+      sections {
+        id
+        attributes {
+          description
+          order
+          content
+          contentTitle
+          status
+          createdAt
+          updatedAt
+          lessons {
+            data {
+              id
+              attributes {
+                description
+                order
+              }
+            }
+          }
+        }
+      }
+      pagination {
+        total
+      }
+      world {
+        name
+        description
+      }
+    }
+  }
+`;

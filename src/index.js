@@ -4,6 +4,7 @@ const mutationsTypeDefs = require("./plugins/crefinex/server/graphql/typeDefs/mu
 const types = require("./plugins/crefinex/server/graphql/typeDefs/types");
 
 const { updateSection } = require("./plugins/crefinex/server/graphql/resolvers/mutations/section.resolvers");
+const { updateWorld } = require("./plugins/crefinex/server/graphql/resolvers/mutations/world.resolvers");
 const { updateLesson } = require("./plugins/crefinex/server/graphql/resolvers/mutations/lesson.resolvers");
 const { updateExercise } = require("./plugins/crefinex/server/graphql/resolvers/mutations/exercise.resolvers");
 const { createOrUpdateCompletedLesson } = require("./plugins/crefinex/server/graphql/resolvers/mutations/completedLesson.resolvers");
@@ -32,6 +33,7 @@ module.exports = {
         Query: queryResolvers,
         Mutation: {
           updateSection, // IMPORTANT This should be the new way to include resolvers
+          updateWorld,
           updateLesson,
           updateExercise,
           createOrUpdateCompletedLesson,

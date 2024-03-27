@@ -7,6 +7,24 @@ export const queryWorlds = gql`
         id
         attributes {
           name
+          description
+          order
+          status
+          image {
+            data {
+              id
+              attributes {
+                formats
+                previewUrl
+                url
+              }
+            }
+          }
+        }
+      }
+      meta {
+        pagination {
+          total
         }
       }
     }

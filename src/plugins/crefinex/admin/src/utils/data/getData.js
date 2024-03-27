@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { query } from "../graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../constants/queryKeys.constants";
-import { querySections } from "../graphql/queries/section.queries";
+import { querySections, querySectionsByWorld } from "../graphql/queries/section.queries";
 import { queryLessonsBySectionId } from "../graphql/queries/lesson.queries";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -16,7 +16,24 @@ const findAll = async (queryFn, start, limit) => {
 const findById = (queryFn, id, start, limit) => {
   return query(queryFn, { id, start, limit });
 };
-
+export const getWorlds = () => {
+  const [worlds, setWorlds] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds), {
+    refetchOnWindowFocus: false,
+  });
+  useEffect(() => {
+    setWorlds(formatData(data?.crefinexWorlds?.data));
+    console.log(data?.crefinexWorlds);
+    setPagination(data?.crefinexWorlds?.meta?.pagination);
+  }, [data]);
+  return {
+    worlds,
+    pagination,
+    isLoading,
+    error,
+  };
+};
 export const getSections = () => {
   const [sections, setSections] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -36,6 +53,30 @@ export const getSections = () => {
   return {
     sections,
     pagination,
+    isLoading,
+    error,
+  };
+};
+
+export const getSectionsByWorld = (worldId) => {
+  const [sections, setSections] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const search = useLocation().search;
+  const params = new URLSearchParams(search);
+  const start = Number(params.get("page"));
+  const limit = Number(params.get("pageSize"));
+
+  const { data, isLoading, error } = useQuery([QUERY_KEYS.sections], () => findById(querySectionsByWorld, worldId, start, limit));
+
+  useEffect(() => {
+    console.log(data);
+    setSections(formatData(data?.sectionsByWorldId?.sections));
+    setPagination(data?.sectionsByWorldId?.pagination);
+  }, [data]);
+
+  return {
+    pagination,
+    sections,
     isLoading,
     error,
   };
@@ -83,22 +124,6 @@ export const getExercisesByLesson = (lessonId) => {
   return {
     pagination,
     exercises,
-    isLoading,
-    error,
-  };
-};
-
-export const getWorlds = () => {
-  const [worlds, setWorlds] = useState([]);
-
-  const { data, isLoading, error } = useQuery([QUERY_KEYS.worlds], () => query(queryWorlds));
-
-  useEffect(() => {
-    setWorlds(formatData(data?.crefinexWorlds?.data));
-  }, [data]);
-
-  return {
-    worlds,
     isLoading,
     error,
   };

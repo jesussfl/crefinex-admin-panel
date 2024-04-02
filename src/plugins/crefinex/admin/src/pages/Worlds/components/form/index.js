@@ -24,7 +24,6 @@ import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
 import { getWorlds } from "../../../../utils/data/getData";
 import { useAssetsDialog } from "../../../../utils/hooks/useAssetsDialog";
-import { prefixFileUrlWithBackendUrl } from "@strapi/helper-plugin";
 const MAX_DESCRIPTION_LENGTH = 100;
 const MIN_DESCRIPTION_LENGTH = 10;
 
@@ -87,7 +86,6 @@ export default function WorldsForm() {
         { id: defaultValues.id, data },
         {
           onSuccess: () => {
-            console.log("Mundo editado");
             showAlert("success", `Mundo editado`);
             queryClient.invalidateQueries(QUERY_KEYS.sections);
             modalHandler.close();

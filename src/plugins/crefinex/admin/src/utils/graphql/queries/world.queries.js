@@ -10,6 +10,8 @@ export const queryWorlds = gql`
           description
           order
           status
+          createdAt
+          updatedAt
           image {
             data {
               id

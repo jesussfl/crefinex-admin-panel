@@ -15,6 +15,11 @@ type LessonsBySection {
     pagination: Pagination
     world: CrefinexWorld
   }
+  type SectionsByWorldId {
+    sections: [CrefinexSectionEntity]
+    pagination: Pagination
+    world: CrefinexWorld
+  }
   type LessonsCompletedByUser {
     lessonsCompleted: [CrefinexLessonCompletedEntity]
     pagination: Pagination
@@ -32,6 +37,9 @@ type LessonsBySection {
   }
   type UpdateSection {
     data: CrefinexSectionEntity
+  }
+  type UpdateWorld {
+    data: CrefinexWorldEntity
   }
   extend type UsersPermissionsMe{
     money: Float

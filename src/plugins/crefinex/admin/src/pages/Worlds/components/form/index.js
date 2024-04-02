@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 // Components
 import {
@@ -12,30 +12,26 @@ import {
   Typography,
   Button,
 } from "@strapi/design-system";
-import Wysiwyg from "../../../../components/Wysiwyg/Wysiwyg";
 
 // Hooks and utilities
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm, useFormState } from "react-hook-form";
 import { useModal } from "../../../../utils";
-import { queryWorlds } from "../../../../utils/graphql/queries/world.queries";
 import { query } from "../../../../utils/graphql/client/GraphQLCLient";
 import { QUERY_KEYS } from "../../../../utils/constants/queryKeys.constants";
-import { createSection, updateSection } from "../../../../utils/graphql/mutations/section.mutations";
+import { createWorld, updateWorld } from "../../../../utils/graphql/mutations/world.mutations";
 import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
-import { getSections, getSectionsByWorld } from "../../../../utils/data/getData";
-import { CustomAlert, Loader } from "../../../../components";
-import { io } from "socket.io-client";
+import { getWorlds } from "../../../../utils/data/getData";
+import { useAssetsDialog } from "../../../../utils/hooks/useAssetsDialog";
 const MAX_DESCRIPTION_LENGTH = 100;
-const MAX_WYSIWYG_LENGTH = 1000;
 const MIN_DESCRIPTION_LENGTH = 10;
 
-export default function SectionForm({ worldId }) {
+export default function WorldsForm() {
   // Utilities
 
-  const { showAlert } = useAlert();
   const { modalHandler, defaultValues } = useModal();
+  const { showAlert } = useAlert();
 
   // This is used to know if the form is in edit mode
   const isEditEnabled = !!defaultValues;
@@ -43,27 +39,38 @@ export default function SectionForm({ worldId }) {
   // Form management
   const form = useForm({ defaultValues });
   const { isDirty, dirtyFields } = useFormState({ control: form.control });
+  const { AssetsDialog, isAssetsDialogOpen, toggleAssetsDialog } = useAssetsDialog();
+  const selectAssets = (files) => {
+    const formattedFiles = files;
+    if (formattedFiles.length > 1) {
+      return;
+    }
 
+    form.setValue(`image`, formattedFiles[0].id, {
+      shouldDirty: true,
+    });
+
+    toggleAssetsDialog();
+  };
   // Data management
   const queryClient = useQueryClient();
-  const { pagination } = getSectionsByWorld(worldId);
-  const { mutate: create } = useMutation((data) => query(createSection, data));
-  const { mutate: update } = useMutation((data) => query(updateSection, data));
+  const { pagination } = getWorlds();
+  const { mutate: create } = useMutation((data) => query(createWorld, data));
+  const { mutate: update } = useMutation((data) => query(updateWorld, data));
 
   const onSubmit = (values) => {
     if (!isEditEnabled) {
       const data = {
         ...values,
         order: parseFloat(pagination?.total + 1),
-        world: worldId,
       };
 
       create(
         { data },
         {
           onSuccess: () => {
-            showAlert("success", `Sección creada`);
-            queryClient.invalidateQueries(QUERY_KEYS.sections);
+            showAlert("success", `Mundo creado`);
+            queryClient.invalidateQueries(QUERY_KEYS.worlds);
             modalHandler.close();
           },
           onError: (error) => {
@@ -79,8 +86,7 @@ export default function SectionForm({ worldId }) {
         { id: defaultValues.id, data },
         {
           onSuccess: () => {
-            console.log("Sección editada");
-            showAlert("success", `Sección editada`);
+            showAlert("success", `Mundo editado`);
             queryClient.invalidateQueries(QUERY_KEYS.sections);
             modalHandler.close();
           },
@@ -98,11 +104,21 @@ export default function SectionForm({ worldId }) {
     <ModalLayout labelledBy="title" as="form" onSubmit={form.handleSubmit(onSubmit)} onClose={modalHandler.close}>
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
-          {isEditEnabled ? "Editar sección" : "Crear sección"}
+          {isEditEnabled ? "Editar Mundo" : "Crear Mundo"}
         </Typography>
       </ModalHeader>
 
       <ModalBody style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Controller
+          name={"name"}
+          control={form.control}
+          rules={{
+            required: "Este campo es requerido",
+          }}
+          render={({ field: { onChange, onBlur, value }, fieldState }) => (
+            <TextInput onChange={onChange} onBlur={onBlur} value={value || ""} label={"Nombre"} error={fieldState.error?.message} />
+          )}
+        />
         <Controller
           name={"description"}
           control={form.control}
@@ -128,7 +144,18 @@ export default function SectionForm({ worldId }) {
             />
           )}
         />
-
+        {form.watch(`image`) ? (
+          <Typography style={{ fontSize: "12px" }}>Imagen Añadida: {form.watch(`image`)}</Typography>
+        ) : (
+          <Typography style={{ fontSize: "12px" }}>Sin imagen</Typography>
+        )}
+        <Button
+          onClick={() => {
+            toggleAssetsDialog();
+          }}
+        >
+          {form.watch(`image`) ? "Cambiar imagen" : "Anadir imagen"}
+        </Button>
         {isEditEnabled && (
           <Controller
             name={"order"}
@@ -149,41 +176,6 @@ export default function SectionForm({ worldId }) {
         )}
 
         <Controller
-          name={"contentTitle"}
-          control={form.control}
-          rules={{
-            required: "Este campo es requerido",
-          }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <TextInput
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value || ""}
-              label={"Título del contenido"}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
-          name={"content"}
-          control={form.control}
-          rules={{
-            required: "Este campo es obligatorio",
-            maxLength: { value: MAX_WYSIWYG_LENGTH, message: `Máximo ${MAX_WYSIWYG_LENGTH} caracteres` },
-            minLength: { value: 100, message: "El contenido es muy corto" },
-          }}
-          render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <Wysiwyg
-              name={"content"}
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-              displayName={"Contenido de la sección"}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
           name={"status"}
           control={form.control}
           rules={{ required: "Este campo es requerido" }}
@@ -203,8 +195,9 @@ export default function SectionForm({ worldId }) {
             Cancelar
           </Button>
         }
-        endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar sección"}</Button>}
+        endActions={<Button type="submit">{isEditEnabled ? "Guardar cambios" : "Guardar Mundo"}</Button>}
       />
+      {isAssetsDialogOpen && <AssetsDialog onClose={toggleAssetsDialog} onSelectAssets={selectAssets} />}
     </ModalLayout>
   );
 }

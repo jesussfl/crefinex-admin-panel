@@ -13,13 +13,17 @@ export const APP_ROUTES = {
   EXERCISES: `/plugins/${pluginId}/exercises/:lessonId`,
 
   // Define a route for sections
-  SECTIONS: `/plugins/${pluginId}/sections`,
+  SECTIONS: `/plugins/${pluginId}/sections/:worldId`,
+
+  WORLDS: `/plugins/${pluginId}/worlds`,
 };
 
 // Define route paths for specific plugin pages using constants
 export const ROUTES = {
+  WORLDS: `/plugins/${pluginId}/worlds?page=1&pageSize=10&sort=id:ASC`,
+
   // Define a route for sections with query parameters for pagination and sorting
-  SECTIONS: `/plugins/${pluginId}/sections?page=1&pageSize=10&sort=id:ASC`,
+  SECTIONS: (id) => `/plugins/${pluginId}/sections/${id}?page=1&pageSize=10&sort=id:ASC`,
 
   // Define a dynamic route for lessons using a function that takes an 'id' parameter
   LESSON: (id) => `/plugins/${pluginId}/lessons/${id}?page=1&pageSize=10&sort=id:ASC`,

@@ -16,16 +16,14 @@ module.exports = {
       const oldOrder = world.order;
 
       //This query swaps the values of order for the records with the specified oldOrder and newOrder.
-      await strapi.db.connection.raw(`
-            UPDATE worlds 
-            SET \`order\` = 
-            CASE
-            WHEN \`order\` = ${oldOrder} THEN ${newOrder}
-            WHEN \`order\` = ${newOrder} THEN ${oldOrder}
-            ELSE \`order\`
-            END
-            WHERE \`order\` IN (${oldOrder}, ${newOrder})
-            `);
+      await strapi.db.connection.raw(
+        `UPDATE worlds
+        SET \`order\` = \`order\` ${newOrder > oldOrder ? "-" : "+"} 1 
+        WHERE \`order\` ${newOrder > oldOrder ? "<=" : ">="} ${newOrder} 
+        AND \`order\` ${newOrder > oldOrder ? ">" : "<"} ${oldOrder}
+       
+        `
+      );
     }
 
     //Important! this should be done after the order swap.

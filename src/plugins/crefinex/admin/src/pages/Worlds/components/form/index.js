@@ -24,7 +24,7 @@ import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
 import { useAlert } from "../../../../utils/contexts/AlertContext";
 import { getWorlds } from "../../../../utils/data/getData";
 import { useAssetsDialog } from "../../../../utils/hooks/useAssetsDialog";
-const MAX_DESCRIPTION_LENGTH = 100;
+const MAX_DESCRIPTION_LENGTH = 500;
 const MIN_DESCRIPTION_LENGTH = 10;
 
 export default function WorldsForm() {
@@ -114,9 +114,20 @@ export default function WorldsForm() {
           control={form.control}
           rules={{
             required: "Este campo es requerido",
+            maxLength: {
+              value: 50,
+              message: `El nombre debe tener como máximo 50 carácteres`,
+            },
           }}
           render={({ field: { onChange, onBlur, value }, fieldState }) => (
-            <TextInput onChange={onChange} onBlur={onBlur} value={value || ""} label={"Nombre"} error={fieldState.error?.message} />
+            <TextInput
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value || ""}
+              label={"Nombre"}
+              error={fieldState.error?.message}
+              hint={"Max. 50 carácteres"}
+            />
           )}
         />
         <Controller
@@ -139,7 +150,7 @@ export default function WorldsForm() {
               onBlur={onBlur}
               value={value || ""}
               label={"Descripción"}
-              hint={`${MAX_DESCRIPTION_LENGTH} carácteres como máximo`}
+              hint={`${MAX_DESCRIPTION_LENGTH} carácteres máximo`}
               error={fieldState.error?.message}
             />
           )}

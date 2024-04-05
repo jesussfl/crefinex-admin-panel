@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Link, IconButton, Box, Td } from "@strapi/design-system";
+import { Flex, Link, IconButton, Box, Td, Button, Typography } from "@strapi/design-system";
 import { ROUTES } from "../../utils/constants/routes.constants";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ArrowRight, Trash, Pencil } from "@strapi/icons";
@@ -13,11 +13,22 @@ const defaultColumns = (modalHandler) => {
     }),
     columnHelper.accessor("content", {
       header: "Contenido JSON",
-      cell: (info) => <Td style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(info.getValue())}</Td>,
+      cell: (info) => (
+        <Td style={{ whiteSpace: "pre-wrap" }}>
+          <Typography>{JSON.stringify(info.getValue())}</Typography>
+        </Td>
+      ),
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor("order", {
-      header: "Orden",
+      header: ({ column }) => {
+        return (
+          <Button variant="tertiary" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+            Orden
+            {column.getIsSorted() === "desc" ? " ↓" : " ↑"}
+          </Button>
+        );
+      },
       cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),

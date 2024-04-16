@@ -27,6 +27,7 @@ import WordMemoryForm from "./wordMemoryForm";
 import TheoryExerciseForm from "./theoryExerciseForm";
 import { getExercisesByLesson } from "../../../../utils/data/getData";
 import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
+import PairsForm from "./pairsExerciseForm";
 
 export default function ExerciseForm({ lessonId }) {
   const { modalHandler, defaultValues } = useModal();
@@ -101,7 +102,10 @@ export default function ExerciseForm({ lessonId }) {
       return <WordMemoryForm />;
     } else if (form.watch("type") === "theory") {
       return <TheoryExerciseForm />;
+    } else if (form.watch("type") === "pairs") {
+      return <PairsForm />;
     }
+
     return null;
   };
   return (
@@ -138,6 +142,7 @@ export default function ExerciseForm({ lessonId }) {
                 <SingleSelectOption value="completion">Completar</SingleSelectOption>
                 <SingleSelectOption value="wordsMemory">Memoria de palabras</SingleSelectOption>
                 <SingleSelectOption value="simpleSelection">Seleccion Simple</SingleSelectOption>
+                <SingleSelectOption value="pairs">Pareo</SingleSelectOption>
                 <SingleSelectOption value="theory">Teoria</SingleSelectOption>
               </SingleSelect>
             )}

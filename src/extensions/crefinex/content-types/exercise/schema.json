@@ -18,7 +18,8 @@
         "completion",
         "simpleSelection",
         "wordsMemory",
-        "theory"
+        "theory",
+        "pairs"
       ]
     },
     "lesson": {

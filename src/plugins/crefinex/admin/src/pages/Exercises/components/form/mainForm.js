@@ -27,6 +27,8 @@ import WordMemoryForm from "./wordMemoryForm";
 import TheoryExerciseForm from "./theoryExerciseForm";
 import { getExercisesByLesson } from "../../../../utils/data/getData";
 import { getDirtyValues } from "../../../../utils/helpers/getDirtyValues";
+import PairsForm from "./pairsExerciseForm";
+import MemoryForm from "./memoryExerciseForm";
 
 export default function ExerciseForm({ lessonId }) {
   const { modalHandler, defaultValues } = useModal();
@@ -97,11 +99,14 @@ export default function ExerciseForm({ lessonId }) {
       return <CompletionExerciseForm />;
     } else if (form.watch("type") === "simpleSelection") {
       return <SimpleSelectionForm />;
-    } else if (form.watch("type") === "wordsMemory") {
-      return <WordMemoryForm />;
+    } else if (form.watch("type") === "memory") {
+      return <MemoryForm />;
     } else if (form.watch("type") === "theory") {
       return <TheoryExerciseForm />;
+    } else if (form.watch("type") === "pairs") {
+      return <PairsForm />;
     }
+
     return null;
   };
   return (
@@ -136,8 +141,9 @@ export default function ExerciseForm({ lessonId }) {
                 error={fieldState.error?.message}
               >
                 <SingleSelectOption value="completion">Completar</SingleSelectOption>
-                <SingleSelectOption value="wordsMemory">Memoria de palabras</SingleSelectOption>
+                <SingleSelectOption value="memory">Memoria</SingleSelectOption>
                 <SingleSelectOption value="simpleSelection">Seleccion Simple</SingleSelectOption>
+                <SingleSelectOption value="pairs">Pareo</SingleSelectOption>
                 <SingleSelectOption value="theory">Teoria</SingleSelectOption>
               </SingleSelect>
             )}

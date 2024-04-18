@@ -17,7 +17,7 @@
       "enum": [
         "completion",
         "simpleSelection",
-        "wordsMemory",
+        "memory",
         "theory",
         "pairs"
       ]
